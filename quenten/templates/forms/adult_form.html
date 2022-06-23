@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Adult Form{% endblock %}
+
+{% block content %}
+<h3 class="mt-5 mb-5">Team: {{ name }}, {{ address }}</h3>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form|crispy }}
+  <button type="submit" class="btn btn-primary mt-3 mb-5">Submit</button>
+</form>
+
+<script>
+
+  // This is the listener for select boxes, updating the input on keyup.
+  document.querySelectorAll('select').forEach(item => {
+    item.addEventListener('keyup', event => {
+      if (isNaN(event.key) || event.key > item.length) {
+        null
+      } else {
+        // Assumes 0 index based - as first option in the list is default dashes -----
+        let indexKey = parseInt(event.key)
+        item.selectedIndex = indexKey;
+      }
+    })
+  })
+
+</script>
+
+{% endblock %}
