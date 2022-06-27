@@ -172,14 +172,14 @@ class Team(BaseModel):
     sub_district = models.CharField(max_length=40, null=True, blank=True)
     fft_category = models.CharField(max_length=60, null=True, blank=True)
 
+    def __str__(self) -> str:
+        return f"{self.code}, {self.name}, {self.district}"
+
 
 class Person(BaseModel):
     """
     Base class for all forms.
     """
-
-    class Meta:
-        abstract = True
 
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     added_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, editable=False)
@@ -195,6 +195,9 @@ class Person(BaseModel):
         blank=True,
         help_text="Please tick here if you DO NOT wish your comments to be made public",
     )
+
+    def __str__(self) -> str:
+        return f"{self.created_at}, {self.team.name}"
 
 
 class Adult(Person, DemographicsMixin, PregnancyMixin):

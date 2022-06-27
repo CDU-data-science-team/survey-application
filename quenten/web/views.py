@@ -1,21 +1,15 @@
 from typing import Any, Dict
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models.query import QuerySet
 from django.shortcuts import HttpResponseRedirect
-from django.views.generic import (
-    CreateView,
-    DeleteView,
-    DetailView,
-    FormView,
-    ListView,
-    UpdateView,
-)
+from django.views.generic import CreateView, FormView, ListView, UpdateView
 
 from .forms import AdultForm, TeamForm
-from .models import Accessible, Adult, Carer, Child, Team, YoungCarer
+from .models import Accessible, Adult, Carer, Child, Person, Team, YoungCarer
 
 
-class TeamSelectView(LoginRequiredMixin, FormView):
+class TeamSelectView(FormView):
     """
     Form view for selecting the team and redirecting on form choice.
     """
@@ -49,7 +43,7 @@ class AdultCreateView(LoginRequiredMixin, CreateView):
 
     model = Adult
     form_class = AdultForm
-    template_name = "forms/adult_form.html"
+    template_name = "forms/person_form.html"
     success_url = "/"
 
     def get_form_kwargs(self) -> Dict[str, Any]:
@@ -64,3 +58,44 @@ class AdultCreateView(LoginRequiredMixin, CreateView):
         kwargs["team"] = team_object
         self.extra_context = {"name": team_object.name, "address": team_object.district}
         return kwargs
+
+
+class AdultUpdateView(LoginRequiredMixin, UpdateView):
+    """
+    Update view.
+    """
+
+    model = Adult
+    form_class = AdultForm
+    template_name: str = "forms/person_form.html"
+    success_url = "/"
+
+    def get_object(self) -> Adult:
+        return Adult.objects.get(id=self.kwargs.get("uuid"))
+
+    def get_form_kwargs(self) -> Dict[str, Any]:
+        """
+        Override to add additional request parameters for form and team.
+        """
+        kwargs = super(AdultUpdateView, self).get_form_kwargs()
+        kwargs["request"] = self.request
+
+        team_object = self.object.team
+        kwargs["team"] = self.object.team
+        self.extra_context = {"name": team_object.name, "address": team_object.district}
+        return kwargs
+
+
+class ResultsListView(LoginRequiredMixin, ListView):
+    """
+    List view for all survey results.
+    """
+
+    template_name: str = "list.html"
+    model: Person
+
+    def get_queryset(self) -> QuerySet:
+        """
+        Override.
+        """
+        return Person.objects.order_by("-created_at")

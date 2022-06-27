@@ -2,6 +2,7 @@
 from typing import Any
 
 from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Div, Field, Layout, Submit
 from django import forms
 
 from .models import Adult, Team
@@ -29,6 +30,16 @@ class TeamForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = "post"
+        self.helper.layout = Layout(
+            Field(
+                "team",
+                wrapper_class="col-md-4",
+                css_class="form-control",
+                autofocus="autofocus",
+            ),
+            Field("choice", wrapper_class="col-md-4", css_class="form-control"),
+            Submit("submit", "Submit", css_class="mt-3"),
+        )
 
 
 class AdultForm(forms.ModelForm):
@@ -63,6 +74,74 @@ class AdultForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = "post"
+        self.helper.layout = Layout(
+            Div(
+                Field(
+                    "carer_type",
+                    wrapper_class="col-md-4",
+                    css_class="form-control",
+                    autofocus="autofocus",
+                ),
+                css_class="row",
+            ),
+            Div(
+                Field("experience", wrapper_class="col-md-4", css_class="form-control"),
+                Field("listening", wrapper_class="col-md-4", css_class="form-control"),
+                Field("explaining", wrapper_class="col-md-4", css_class="form-control"),
+                css_class="row",
+            ),
+            Div(
+                Field("kind", wrapper_class="col-md-4", css_class="form-control"),
+                Field("treatment", wrapper_class="col-md-4", css_class="form-control"),
+                Field("positive", wrapper_class="col-md-4", css_class="form-control"),
+                css_class="row",
+            ),
+            Div(
+                Field(
+                    "comments_good",
+                    wrapper_class="col-md-6",
+                    rows="2",
+                    css_class="form-control",
+                ),
+                Field(
+                    "comments_better",
+                    wrapper_class="col-md-6",
+                    rows="2",
+                    css_class="form-control",
+                ),
+                css_class="row",
+            ),
+            Field(
+                "comments_public", wrapper_class="col-md-4", css_class="form-control"
+            ),
+            Div(
+                Field("gender", wrapper_class="col-md-4", css_class="form-control"),
+                Field(
+                    "ethnic_group", wrapper_class="col-md-4", css_class="form-control"
+                ),
+                Field("disability", wrapper_class="col-md-4", css_class="form-control"),
+                css_class="row",
+            ),
+            Div(
+                Field("religion", wrapper_class="col-md-4", css_class="form-control"),
+                Field(
+                    "sexual_orientation",
+                    wrapper_class="col-md-4",
+                    css_class="form-control",
+                ),
+                Field("ages", wrapper_class="col-md-4", css_class="form-control"),
+                css_class="row",
+            ),
+            Div(
+                Field(
+                    "relationship", wrapper_class="col-md-4", css_class="form-control"
+                ),
+                Field("pregnant", wrapper_class="col-md-4", css_class="form-control"),
+                Field("baby", wrapper_class="col-md-4", css_class="form-control"),
+                css_class="row",
+            ),
+            Submit("submit", "Submit", css_class="mt-3"),
+        )
 
     def save(self, commit=True) -> Any:
         """

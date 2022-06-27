@@ -1,12 +1,16 @@
 {% extends "base.html" %}
-{% load crispy_forms_tags %}
 
-{% block title %}Team Form{% endblock %}
+{% block title %}Team Select{% endblock %}
 
 {% block content %}
-<form method="post">
-  {% csrf_token %}
-  {{ form|crispy }}
-  <button type="submit" class="btn btn-primary mt-3 mb-5">Submit</button>
-</form>
+
+  {% if user.is_authenticated %}
+    <form method="post">
+      {% load crispy_forms_tags %}
+      {% crispy form %}
+    </form>
+  {% else %}
+      <a href="{% url 'login' %}">Login</a>
+  {% endif %}
+
 {% endblock %}
