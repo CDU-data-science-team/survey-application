@@ -61,7 +61,7 @@ class AdultForm(forms.ModelForm):
             "disability",
             "religion",
             "sexual_orientation",
-            "ages",
+            "age",
             "relationship",
             "pregnant",
             "baby",
@@ -69,7 +69,7 @@ class AdultForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        self.team_object = kwargs.pop("team")
+        self.team_object = kwargs.pop("team", "")
 
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -129,7 +129,7 @@ class AdultForm(forms.ModelForm):
                     wrapper_class="col-md-4",
                     css_class="form-control",
                 ),
-                Field("ages", wrapper_class="col-md-4", css_class="form-control"),
+                Field("age", wrapper_class="col-md-4", css_class="form-control"),
                 css_class="row",
             ),
             Div(

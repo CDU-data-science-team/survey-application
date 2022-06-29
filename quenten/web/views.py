@@ -2,14 +2,14 @@ from typing import Any, Dict
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models.query import QuerySet
-from django.shortcuts import HttpResponseRedirect
+from django.shortcuts import HttpResponseRedirect, redirect
 from django.views.generic import CreateView, FormView, ListView, UpdateView
 
 from .forms import AdultForm, TeamForm
 from .models import Accessible, Adult, Carer, Child, Person, Team, YoungCarer
 
 
-class TeamSelectView(FormView):
+class TeamSelectView(LoginRequiredMixin, FormView):
     """
     Form view for selecting the team and redirecting on form choice.
     """
@@ -53,10 +53,14 @@ class AdultCreateView(LoginRequiredMixin, CreateView):
         kwargs = super(AdultCreateView, self).get_form_kwargs()
         kwargs["request"] = self.request
 
-        team_id = self.request.session["team"]
-        team_object = Team.objects.filter(id=team_id).first()
-        kwargs["team"] = team_object
-        self.extra_context = {"name": team_object.name, "address": team_object.district}
+        team_id = self.request.session.get("team")
+        if team_id is not None:
+            team_object = Team.objects.filter(id=team_id).first()
+            kwargs["team"] = team_object
+            self.extra_context = {
+                "name": team_object.name,
+                "address": team_object.district,
+            }
         return kwargs
 
 

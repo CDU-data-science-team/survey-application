@@ -17,8 +17,9 @@ Install [Poetry](https://python-poetry.org/docs/).
 3. CD to `/quenten/`
 4. Run database migrations `python manage.py migrate`
 5. Add a new user `python manage.py createsuperuser`
-6. Run application `python manage.py runserver`
-7. Open `http://localhost:8000/`
+6. Seed initial form values `python manage.py loaddata seed_data.json --app web`
+7. Run application `python manage.py runserver`
+8. Open `http://localhost:8000/`
 
 ### Quickstart in Docker (todo)
 

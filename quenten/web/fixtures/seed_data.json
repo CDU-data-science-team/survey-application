@@ -1,0 +1,641 @@
+[
+    {
+        "model": "web.gender",
+        "pk": null,
+        "fields": {
+            "name": "Male",
+            "value": "M",
+            "sort_order": 1
+        }
+    },
+    {
+        "model": "web.gender",
+        "pk": null,
+        "fields": {
+            "name": "Female",
+            "value": "F",
+            "sort_order": 2
+        }
+    },
+    {
+        "model": "web.gender",
+        "pk": null,
+        "fields": {
+            "name": "Other",
+            "value": "O",
+            "sort_order": 3
+        }
+    },
+    {
+        "model": "web.gender",
+        "pk": null,
+        "fields": {
+            "name": "Refused",
+            "value": "R",
+            "sort_order": 4
+        }
+    },
+    {
+        "model": "web.ethnicgroup",
+        "pk": null,
+        "fields": {
+            "name": "British",
+            "value": "BR",
+            "sort_order": 1
+        }
+    },
+    {
+        "model": "web.ethnicgroup",
+        "pk": null,
+        "fields": {
+            "name": "Irish",
+            "value": "IR",
+            "sort_order": 2
+        }
+    },
+    {
+        "model": "web.ethnicgroup",
+        "pk": null,
+        "fields": {
+            "name": "Caribbean",
+            "value": "CA",
+            "sort_order": 3
+        }
+    },
+    {
+        "model": "web.ethnicgroup",
+        "pk": null,
+        "fields": {
+            "name": "African",
+            "value": "AF",
+            "sort_order": 4
+        }
+    },
+    {
+        "model": "web.ethnicgroup",
+        "pk": null,
+        "fields": {
+            "name": "Indian",
+            "value": "IN",
+            "sort_order": 5
+        }
+    },
+    {
+        "model": "web.ethnicgroup",
+        "pk": null,
+        "fields": {
+            "name": "Pakistani",
+            "value": "PA",
+            "sort_order": 6
+        }
+    },
+    {
+        "model": "web.ethnicgroup",
+        "pk": null,
+        "fields": {
+            "name": "Bangladeshi",
+            "value": "BA",
+            "sort_order": 7
+        }
+    },
+    {
+        "model": "web.ethnicgroup",
+        "pk": null,
+        "fields": {
+            "name": "White and Black African",
+            "value": "WBA",
+            "sort_order": 8
+        }
+    },
+    {
+        "model": "web.ethnicgroup",
+        "pk": null,
+        "fields": {
+            "name": "White and Black Caribbean",
+            "value": "WBC",
+            "sort_order": 9
+        }
+    },
+    {
+        "model": "web.ethnicgroup",
+        "pk": null,
+        "fields": {
+            "name": "White and Asian",
+            "value": "WA",
+            "sort_order": 10
+        }
+    },
+    {
+        "model": "web.ethnicgroup",
+        "pk": null,
+        "fields": {
+            "name": "Chinese",
+            "value": "CH",
+            "sort_order": 11
+        }
+    },
+    {
+        "model": "web.ethnicgroup",
+        "pk": null,
+        "fields": {
+            "name": "Gypsy / Roma / Traveller",
+            "value": "GRT",
+            "sort_order": 12
+        }
+    },
+    {
+        "model": "web.ethnicgroup",
+        "pk": null,
+        "fields": {
+            "name": "Do not wish to say",
+            "value": "DNWTS",
+            "sort_order": 13
+        }
+    },
+    {
+        "model": "web.ethnicgroup",
+        "pk": null,
+        "fields": {
+            "name": "Refused",
+            "value": "R",
+            "sort_order": 14
+        }
+    },
+    {
+        "model": "web.disability",
+        "pk": null,
+        "fields": {
+            "name": "Yes",
+            "value": "Y",
+            "sort_order": 1
+        }
+    },
+    {
+        "model": "web.disability",
+        "pk": null,
+        "fields": {
+            "name": "No",
+            "value": "N",
+            "sort_order": 2
+        }
+    },
+    {
+        "model": "web.disability",
+        "pk": null,
+        "fields": {
+            "name": "Do not wish to say",
+            "value": "DNWTS",
+            "sort_order": 3
+        }
+    },
+    {
+        "model": "web.disability",
+        "pk": null,
+        "fields": {
+            "name": "Refused",
+            "value": "R",
+            "sort_order": 4
+        }
+    },
+    {
+        "model": "web.religion",
+        "pk": null,
+        "fields": {
+            "name": "Christian",
+            "value": "C",
+            "sort_order": 1
+        }
+    },
+    {
+        "model": "web.religion",
+        "pk": null,
+        "fields": {
+            "name": "Buddhist",
+            "value": "B",
+            "sort_order": 2
+        }
+    },
+    {
+        "model": "web.religion",
+        "pk": null,
+        "fields": {
+            "name": "Hindu",
+            "value": "H",
+            "sort_order": 3
+        }
+    },
+    {
+        "model": "web.religion",
+        "pk": null,
+        "fields": {
+            "name": "Jewish",
+            "value": "J",
+            "sort_order": 4
+        }
+    },
+    {
+        "model": "web.religion",
+        "pk": null,
+        "fields": {
+            "name": "Muslim",
+            "value": "M",
+            "sort_order": 5
+        }
+    },
+    {
+        "model": "web.religion",
+        "pk": null,
+        "fields": {
+            "name": "Sikh",
+            "value": "S",
+            "sort_order": 6
+        }
+    },
+    {
+        "model": "web.religion",
+        "pk": null,
+        "fields": {
+            "name": "No religion",
+            "value": "NR",
+            "sort_order": 7
+        }
+    },
+    {
+        "model": "web.religion",
+        "pk": null,
+        "fields": {
+            "name": "Do not wish to say",
+            "value": "DNWTS",
+            "sort_order": 8
+        }
+    },
+    {
+        "model": "web.religion",
+        "pk": null,
+        "fields": {
+            "name": "Refused",
+            "value": "R",
+            "sort_order": 9
+        }
+    },
+    {
+        "model": "web.sexualorientation",
+        "pk": null,
+        "fields": {
+            "name": "Heterosexual",
+            "value": "H",
+            "sort_order": 1
+        }
+    },
+    {
+        "model": "web.sexualorientation",
+        "pk": null,
+        "fields": {
+            "name": "Gay man",
+            "value": "G",
+            "sort_order": 2
+        }
+    },
+    {
+        "model": "web.sexualorientation",
+        "pk": null,
+        "fields": {
+            "name": "Lesbian",
+            "value": "L",
+            "sort_order": 3
+        }
+    },
+    {
+        "model": "web.sexualorientation",
+        "pk": null,
+        "fields": {
+            "name": "Bisexual",
+            "value": "B",
+            "sort_order": 4
+        }
+    },
+    {
+        "model": "web.sexualorientation",
+        "pk": null,
+        "fields": {
+            "name": "Pansexual",
+            "value": "P",
+            "sort_order": 5
+        }
+    },
+    {
+        "model": "web.sexualorientation",
+        "pk": null,
+        "fields": {
+            "name": "Demisexual",
+            "value": "D",
+            "sort_order": 6
+        }
+    },
+    {
+        "model": "web.sexualorientation",
+        "pk": null,
+        "fields": {
+            "name": "Do not wish to say",
+            "value": "DNWTSY",
+            "sort_order": 7
+        }
+    },
+    {
+        "model": "web.sexualorientation",
+        "pk": null,
+        "fields": {
+            "name": "Refused",
+            "value": "R",
+            "sort_order": 8
+        }
+    },
+    {
+        "model": "web.age",
+        "pk": null,
+        "fields": {
+            "name": "Under 12",
+            "value": "U12",
+            "sort_order": 1
+        }
+    },
+    {
+        "model": "web.age",
+        "pk": null,
+        "fields": {
+            "name": "12-17",
+            "value": "12",
+            "sort_order": 2
+        }
+    },
+    {
+        "model": "web.age",
+        "pk": null,
+        "fields": {
+            "name": "18-25",
+            "value": "18",
+            "sort_order": 3
+        }
+    },
+    {
+        "model": "web.age",
+        "pk": null,
+        "fields": {
+            "name": "26-39",
+            "value": "26",
+            "sort_order": 4
+        }
+    },
+    {
+        "model": "web.age",
+        "pk": null,
+        "fields": {
+            "name": "40-64",
+            "value": "40",
+            "sort_order": 5
+        }
+    },
+    {
+        "model": "web.age",
+        "pk": null,
+        "fields": {
+            "name": "65-79",
+            "value": "65",
+            "sort_order": 6
+        }
+    },
+    {
+        "model": "web.age",
+        "pk": null,
+        "fields": {
+            "name": "80+",
+            "value": "18",
+            "sort_order": 7
+        }
+    },
+    {
+        "model": "web.age",
+        "pk": null,
+        "fields": {
+            "name": "Refused",
+            "value": "R",
+            "sort_order": 8
+        }
+    },
+    {
+        "model": "web.relationship",
+        "pk": null,
+        "fields": {
+            "name": "Single",
+            "value": "S",
+            "sort_order": 1
+        }
+    },
+    {
+        "model": "web.relationship",
+        "pk": null,
+        "fields": {
+            "name": "Civil Partnership",
+            "value": "CP",
+            "sort_order": 2
+        }
+    },
+    {
+        "model": "web.relationship",
+        "pk": null,
+        "fields": {
+            "name": "Widowed",
+            "value": "W",
+            "sort_order": 3
+        }
+    },
+    {
+        "model": "web.relationship",
+        "pk": null,
+        "fields": {
+            "name": "Married",
+            "value": "M",
+            "sort_order": 4
+        }
+    },
+    {
+        "model": "web.relationship",
+        "pk": null,
+        "fields": {
+            "name": "Separated",
+            "value": "SP",
+            "sort_order": 5
+        }
+    },
+    {
+        "model": "web.relationship",
+        "pk": null,
+        "fields": {
+            "name": "Co-habiting",
+            "value": "CH",
+            "sort_order": 6
+        }
+    },
+    {
+        "model": "web.relationship",
+        "pk": null,
+        "fields": {
+            "name": "Divorced",
+            "value": "D",
+            "sort_order": 7
+        }
+    },
+    {
+        "model": "web.relationship",
+        "pk": null,
+        "fields": {
+            "name": "Do not wish to say",
+            "value": "DNWTS",
+            "sort_order": 8
+        }
+    },
+    {
+        "model": "web.relationship",
+        "pk": null,
+        "fields": {
+            "name": "Refused",
+            "value": "R",
+            "sort_order": 9
+        }
+    },
+    {
+        "model": "web.pregnant",
+        "pk": null,
+        "fields": {
+            "name": "Yes",
+            "value": "Y",
+            "sort_order": 1
+        }
+    },
+    {
+        "model": "web.pregnant",
+        "pk": null,
+        "fields": {
+            "name": "No",
+            "value": "N",
+            "sort_order": 2
+        }
+    },
+    {
+        "model": "web.pregnant",
+        "pk": null,
+        "fields": {
+            "name": "Do not wish to say",
+            "value": "DNWTS",
+            "sort_order": 3
+        }
+    },
+    {
+        "model": "web.pregnant",
+        "pk": null,
+        "fields": {
+            "name": "Refused",
+            "value": "R",
+            "sort_order": 4
+        }
+    },
+    {
+        "model": "web.serviceuser",
+        "pk": null,
+        "fields": {
+            "name": "Patient",
+            "value": "P",
+            "sort_order": 1
+        }
+    },
+    {
+        "model": "web.serviceuser",
+        "pk": null,
+        "fields": {
+            "name": "Carer",
+            "value": "C",
+            "sort_order": 2
+        }
+    },
+    {
+        "model": "web.rating",
+        "pk": null,
+        "fields": {
+            "name": "Very good",
+            "value": "5",
+            "sort_order": 1
+        }
+    },
+    {
+        "model": "web.rating",
+        "pk": null,
+        "fields": {
+            "name": "Good",
+            "value": "4",
+            "sort_order": 2
+        }
+    },
+    {
+        "model": "web.rating",
+        "pk": null,
+        "fields": {
+            "name": "Neither",
+            "value": "3",
+            "sort_order": 3
+        }
+    },
+    {
+        "model": "web.rating",
+        "pk": null,
+        "fields": {
+            "name": "Poor",
+            "value": "4",
+            "sort_order": 4
+        }
+    },
+    {
+        "model": "web.rating",
+        "pk": null,
+        "fields": {
+            "name": "Very poor",
+            "value": "5",
+            "sort_order": 5
+        }
+    },
+    {
+        "model": "web.rating",
+        "pk": null,
+        "fields": {
+            "name": "Don't know",
+            "value": "0",
+            "sort_order": 6
+        }
+    },
+    {
+        "model": "web.directorate",
+        "pk": "366f58db-2c17-4db0-802f-7822112a8af7",
+        "fields": {
+            "name": "Test Directorate 1",
+            "code": 1
+        }
+    },
+    {
+        "model": "web.team",
+        "pk": null,
+        "fields": {
+            "directorate": "366f58db-2c17-4db0-802f-7822112a8af7",
+            "name": "Test Team Name 1",
+            "code": "0.001",
+            "date_from": "2022-06-01",
+            "date_to": "2022-06-20",
+            "time": null,
+            "division": null,
+            "contacts": null,
+            "his": null,
+            "inpatient": null,
+            "district": null,
+            "sub_district": null,
+            "fft_category": null
+        }
+    }
+]

@@ -1,9 +1,16 @@
 from django.contrib import admin
 
-from .models import Adult, Directorate, Team
+from . import models
 
-# Register your models here.
-
-admin.site.register(Directorate)
-admin.site.register(Team)
-admin.site.register(Adult)
+admin.site.register(models.Directorate)
+admin.site.register(models.Team)
+admin.site.register(models.Gender)
+admin.site.register(models.EthnicGroup)
+admin.site.register(models.Disability)
+admin.site.register(models.Religion)
+admin.site.register(models.SexualOrientation)
+admin.site.register(models.Age)
+admin.site.register(models.Relationship)
+admin.site.register(models.Pregnant)
+admin.site.register(models.ServiceUser)
+admin.site.register(models.Rating)

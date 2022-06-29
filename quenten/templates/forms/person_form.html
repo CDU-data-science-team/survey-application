@@ -5,8 +5,8 @@
 {% block content %}
 <h5 class="mb-2">Team: {{ name }}, {{ address }}</h5>
 
-{% if request.resolver_match.url_name == 'form-detail' %}
-  <a href="{% url 'form-update' uuid=object.id %}" class="btn btn-primary mt-3 mb-5">Edit</a>
+{% if request.resolver_match.url_name == 'result-detail' %}
+  <a href="{% url 'result-update' uuid=object.id %}" class="btn btn-primary mt-3 mb-5">Edit</a>
   <fieldset disabled>
 {% else %}
   <fieldset>

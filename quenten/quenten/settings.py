@@ -139,7 +139,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Custom user model configuration
 AUTH_USER_MODEL = "users.CustomUser"
-LOGIN_REDIRECT_URL = "/"
+LOGIN_URL = "/users/login/"
 LOGOUT_REDIRECT_URL = "/"
 
 # Django Crispy Forms configuration

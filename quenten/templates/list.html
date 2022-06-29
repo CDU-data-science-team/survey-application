@@ -16,7 +16,7 @@
         {% for item in object_list %}
             <tr>
                 <td>
-                   <a href="{% url 'form-detail' uuid=item.id %}">{{ item.created_at }}</a>
+                   <a href="{% url 'result-detail' uuid=item.id %}">{{ item.created_at }}</a>
                 </td>
                 <td>
                     {{ item.team.name }}

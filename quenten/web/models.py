@@ -4,104 +4,6 @@ from django.db import models
 from users.models import CustomUser
 
 
-class Gender(models.TextChoices):
-    MALE = "M", "Male"
-    FEMALE = "F", "Female"
-    OTHER = "O", "Other"
-    REFUSED = "R", "Refused"
-
-
-class EthnicGroup(models.TextChoices):
-    BRITISH = "BG", "British"
-    IRISH = "IR", "Irish"
-    CARIBBEAN = "CA", "Caribbean"
-    AFRICAN = "AF", "African"
-    INDIAN = "IN", "Indian"
-    PAKISTANI = "PA", "Pakistani"
-    BANGLADESHI = "BA", "Bangladeshi"
-    W_B_CARIBBEAN = "WBC", "White and Black Caribbean"
-    W_B_AFRICAN = "WBA", "White and Black African"
-    W_ASIAN = "WA", "White African"
-    CHINESE = "CH", "Chinese"
-    GRT = "GRT", "Gypsy/Roma/Traveller"
-    DO_NOT_WISH_TO_SAY = "DNWTS", "Do not wish to say"
-    REFUSED = "R", "Refused"
-
-
-class Disability(models.TextChoices):
-    YES = "Y", "Yes"
-    NO = "N", "No"
-    DO_NOT_WISH_TO_SAY = "DNWTS", "Do not wish to say"
-    REFUSED = "R", "Refused"
-
-
-class Religion(models.TextChoices):
-    CHRISTIAN = "C", "Christian"
-    BUDDHIST = "B", "Buddhist"
-    HINDU = "H", "Hindu"
-    JEWISH = "J", "Jewish"
-    MUSLIM = "M", "Muslim"
-    SIKH = "S", "Sikh"
-    NO_RELIGION = "NR", "No religion"
-    DO_NOT_WISH_TO_SAY = "DNWTS", "Do not wish to say"
-    REFUSED = "R", "Refused"
-
-
-class SexualOrientation(models.TextChoices):
-    HETEROSEXUAL = "H", "Heterosexual"
-    GAY_MAN = "G", "Gay man"
-    LESBIAN = "L", "Lesbian"
-    BISEXUAL = "B", "Bisexual"
-    PANSEXUAL = "P", "Pansexual"
-    DEMISEXUAL = "D", "Demisexual"
-    DO_NOT_WISH_TO_SAY = "DNWTS", "Do not wish to say"
-    REFUSED = "R", "Refused"
-
-
-class Age(models.TextChoices):
-    U12 = "U12", "Under 12"
-    _12_17 = "12", " 12-17"
-    _18_25 = "18", " 18-25"
-    _26_39 = "26", " 26-39"
-    _40_64 = "40", " 40-64"
-    _65_79 = "65", " 65-79"
-    _80 = "80", " 80+"
-    REFUSED = "R", "Refused"
-
-
-class Relationship(models.TextChoices):
-    SINGLE = "S", "Single"
-    CIVIL_PARTNERSHIP = "CP", "Civil Partnership"
-    WIDOWED = "W", "Widowed"
-    MARRIED = "M", "Married"
-    SEPARATED = "SP", "Separated"
-    CO_HABITING = "CH", "Co-habiting"
-    DIVORCED = "D", "Divorced"
-    DO_NOT_WISH_TO_SAY = "DNWTS", "Do not wish to say"
-    REFUSED = "R", "Refused"
-
-
-class Pregnancy(models.TextChoices):
-    YES = "Y", "Yes"
-    NO = "N", "No"
-    DO_NOT_WISH_TO_SAY = "DNWTS", "Do not wish to say"
-    REFUSED = "R", "Refused"
-
-
-class Rating(models.TextChoices):
-    VERY_GOOD = "5", "Very good"
-    GOOD = "4", "Good"
-    NEITHER = "3", "Neither good nor poor"
-    POOR = "2", "Poor"
-    VERY_POOR = "1", "Very poor"
-    DONT_KNOW = "0", "Don't know"
-
-
-class ServiceUser(models.TextChoices):
-    PATIENT = "PATIENT", "Patient/Service User"
-    CARER = "CARER", "Carer/Relative/Friend"
-
-
 class BaseModel(models.Model):
     """
     Base model for all models
@@ -113,6 +15,63 @@ class BaseModel(models.Model):
         abstract = True
 
 
+class QuestionOption(BaseModel):
+    """
+    Base model for all responses.
+    """
+
+    name = models.CharField(max_length=128)
+    value = models.CharField(max_length=128)
+    sort_order = models.PositiveIntegerField()
+
+    class Meta:
+        abstract = True
+        ordering = ["sort_order"]
+
+    def __str__(self) -> str:
+        return f"{self.name}"
+
+
+class Gender(QuestionOption):
+    pass
+
+
+class EthnicGroup(QuestionOption):
+    pass
+
+
+class Disability(QuestionOption):
+    pass
+
+
+class Religion(QuestionOption):
+    pass
+
+
+class SexualOrientation(QuestionOption):
+    pass
+
+
+class Age(QuestionOption):
+    pass
+
+
+class Relationship(QuestionOption):
+    pass
+
+
+class Pregnant(QuestionOption):
+    pass
+
+
+class ServiceUser(QuestionOption):
+    pass
+
+
+class Rating(QuestionOption):
+    pass
+
+
 class DemographicsMixin(models.Model):
     """
     Mixin for demographic fields.
@@ -121,15 +80,21 @@ class DemographicsMixin(models.Model):
     class Meta:
         abstract = True
 
-    gender = models.CharField(max_length=5, choices=Gender.choices)
-    ethnic_group = models.CharField(max_length=5, choices=EthnicGroup.choices)
-    disability = models.CharField(max_length=5, choices=Disability.choices)
-    religion = models.CharField(max_length=5, choices=Religion.choices)
-    sexual_orientation = models.CharField(
-        max_length=5, choices=SexualOrientation.choices
+    gender = models.ForeignKey(Gender, on_delete=models.PROTECT)
+    ethnic_group = models.ForeignKey(EthnicGroup, on_delete=models.PROTECT)
+    disability = models.ForeignKey(
+        Disability,
+        on_delete=models.PROTECT,
+        help_text="Do you have a long term disability or a long-term health condition which affects your day to day activities?",
     )
-    ages = models.CharField(max_length=3, choices=Age.choices)
-    relationship = models.CharField(max_length=5, choices=Relationship.choices)
+    religion = models.ForeignKey(Religion, on_delete=models.PROTECT)
+    sexual_orientation = models.ForeignKey(SexualOrientation, on_delete=models.PROTECT)
+    age = models.ForeignKey(Age, on_delete=models.PROTECT)
+    relationship = models.ForeignKey(
+        Relationship,
+        on_delete=models.PROTECT,
+        help_text="What is your relationship status?",
+    )
 
 
 class PregnancyMixin(models.Model):
@@ -140,8 +105,18 @@ class PregnancyMixin(models.Model):
     class Meta:
         abstract = True
 
-    pregnant = models.CharField(max_length=5, choices=Pregnancy.choices)
-    baby = models.CharField(max_length=5, choices=Pregnancy.choices)
+    pregnant = models.ForeignKey(
+        Pregnant,
+        related_name="pregnant",
+        on_delete=models.PROTECT,
+        help_text="Are you pregnant at this time?",
+    )
+    baby = models.ForeignKey(
+        Pregnant,
+        related_name="baby",
+        on_delete=models.PROTECT,
+        help_text="Have you had a baby within the last 26 weeks?",
+    )
 
 
 class Directorate(BaseModel):
@@ -152,13 +127,16 @@ class Directorate(BaseModel):
     name = models.CharField(max_length=128)
     code = models.IntegerField()
 
+    def __str__(self) -> str:
+        return f"{self.name}"
+
 
 class Team(BaseModel):
     """
     Mirroring existing fields for now.
     """
 
-    directorate = models.ForeignKey(Directorate, on_delete=models.CASCADE)
+    directorate = models.ForeignKey(Directorate, on_delete=models.PROTECT)
     name = models.CharField(max_length=128)
     code = models.DecimalField(max_digits=3, decimal_places=3)
     date_from = models.DateField()
@@ -181,8 +159,8 @@ class Person(BaseModel):
     Base class for all forms.
     """
 
-    team = models.ForeignKey(Team, on_delete=models.CASCADE)
-    added_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, editable=False)
+    team = models.ForeignKey(Team, on_delete=models.PROTECT)
+    added_by = models.ForeignKey(CustomUser, on_delete=models.PROTECT, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -208,37 +186,43 @@ class Adult(Person, DemographicsMixin, PregnancyMixin):
     class Meta:
         pass
 
-    carer_type = models.CharField(
-        max_length=7, choices=ServiceUser.choices, help_text="I am a: "
+    carer_type = models.ForeignKey(
+        ServiceUser, on_delete=models.PROTECT, help_text="I am a: "
     )
-    experience = models.CharField(
-        max_length=1,
-        choices=Rating.choices,
+    experience = models.ForeignKey(
+        Rating,
+        related_name="experience",
+        on_delete=models.PROTECT,
         help_text="Overall, how was your experience of our service?",
     )
-    listening = models.CharField(
-        max_length=1,
-        choices=Rating.choices,
+    listening = models.ForeignKey(
+        Rating,
+        related_name="listening",
+        on_delete=models.PROTECT,
         help_text="How good were our services at listening to you?",
     )
-    explaining = models.CharField(
-        max_length=1,
-        choices=Rating.choices,
+    explaining = models.ForeignKey(
+        Rating,
+        related_name="explaining",
+        on_delete=models.PROTECT,
         help_text="How good were our services at explaining information clearly?",
     )
-    kind = models.CharField(
-        max_length=1,
-        choices=Rating.choices,
+    kind = models.ForeignKey(
+        Rating,
+        related_name="kind",
+        on_delete=models.PROTECT,
         help_text="How good were our services at being kind to you?",
     )
-    treatment = models.CharField(
-        max_length=1,
-        choices=Rating.choices,
+    treatment = models.ForeignKey(
+        Rating,
+        related_name="treatment",
+        on_delete=models.PROTECT,
         help_text="How good were our services at involving you in decisions about your care or treatment?",
     )
-    positive = models.CharField(
-        max_length=1,
-        choices=Rating.choices,
+    positive = models.ForeignKey(
+        Rating,
+        related_name="positive",
+        on_delete=models.PROTECT,
         help_text="How good were our services at making a positive difference to your health and wellbeing?",
     )
 
