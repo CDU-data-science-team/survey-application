@@ -9,6 +9,7 @@
                     {% if user.is_authenticated %}
                         <a class="nav-item nav-link" href="/">Home</a>
                         <a class="nav-item nav-link" href="{% url 'results' %}">Results</a>
+                        <a class="nav-item nav-link" href="{% url 'uncoded-list' %}">Uncoded</a>
                         <a class="nav-item nav-link" href="{% url 'admin:index' %}">Admin</a>
                         <a class="nav-item nav-link" href="{% url 'logout' %}">Log Out</a>
                     {% else %}

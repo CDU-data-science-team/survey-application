@@ -20,6 +20,10 @@
   </form>
 </fieldset>
 
+{% if object %}
+  <div class="mt-2 text-secondary">Last updated: {{ object.updated_at }}</div>
+{% endif %}
+
 <script>
 
   // This is the listener for select boxes, updating the input on keyup.

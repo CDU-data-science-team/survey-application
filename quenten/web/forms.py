@@ -5,7 +5,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Div, Field, Layout, Submit
 from django import forms
 
-from .models import Adult, Team
+from .models import Adult, Person, Team
 
 
 class TeamForm(forms.Form):
@@ -37,7 +37,7 @@ class TeamForm(forms.Form):
                 css_class="form-control",
                 autofocus="autofocus",
             ),
-            Field("choice", wrapper_class="col-md-4", css_class="form-control"),
+            Field("choice", wrapper_class="col-md-4 mt-3", css_class="form-control"),
             Submit("submit", "Submit", css_class="mt-3"),
         )
 
@@ -154,3 +154,94 @@ class AdultForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+
+
+class CodeForm(forms.ModelForm):
+    class Meta:
+        model = Person
+        fields = (
+            "comments_good",
+            "best_code_1",
+            "best_code_2",
+            "positivity",
+            "comments_better",
+            "improve_code_1",
+            "improve_code_2",
+            "criticality",
+            "comments_public",
+        )
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        self.team_object = kwargs.pop("team", "")
+
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = "post"
+        self.helper.layout = Layout(
+            Div(
+                Field(
+                    "comments_good",
+                    readonly=True,
+                    wrapper_class="col-md-6",
+                    rows="4",
+                    css_class="form-control",
+                ),
+                css_class="row mb-3",
+            ),
+            Div(
+                Field(
+                    "best_code_1",
+                    wrapper_class="col-md-4",
+                    rows="2",
+                    css_class="form-control",
+                    autofocus="autofocus",
+                ),
+                Field(
+                    "best_code_2",
+                    wrapper_class="col-md-4",
+                    rows="2",
+                    css_class="form-control",
+                ),
+                Field(
+                    "positivity",
+                    wrapper_class="col-md-4",
+                    rows="2",
+                    css_class="form-control",
+                ),
+                css_class="row mb-3",
+            ),
+            Div(
+                Field(
+                    "comments_better",
+                    readonly=True,
+                    wrapper_class="col-md-6",
+                    rows="2",
+                    css_class="form-control",
+                ),
+                css_class="row mb-3",
+            ),
+            Div(
+                Field(
+                    "improve_code_1",
+                    wrapper_class="col-md-4",
+                    rows="2",
+                    css_class="form-control",
+                ),
+                Field(
+                    "improve_code_2",
+                    wrapper_class="col-md-4",
+                    rows="2",
+                    css_class="form-control",
+                ),
+                Field(
+                    "criticality",
+                    wrapper_class="col-md-4",
+                    rows="2",
+                    css_class="form-control",
+                ),
+                css_class="row mb-3",
+            ),
+            Submit("submit", "Save and next form"),
+            Submit("submit-back", "Save and back to list"),
+        )

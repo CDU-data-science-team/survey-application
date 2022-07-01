@@ -1,10 +1,14 @@
 {% extends "base.html" %}
 
-{% block title %}Results list{% endblock %}
+{% block title %}Uncoded Results{% endblock %}
 
 {% block content %}
 
-<h1>All Results</h1>
+<h1>Uncoded Results</h1>
+
+{% if object_list %}
+    <a href="{% url 'uncoded-next' %}" class="btn btn-primary mt-3 mb-3">Start</a>
+{% endif %}
 
 <table class="table table-striped">
     <thead>
@@ -18,7 +22,7 @@
         {% for item in object_list %}
             <tr>
                 <td>
-                   <a href="{% url 'result-detail' uuid=item.id %}">{{ item.created_at }}</a>
+                   <a href="{% url 'uncoded-update' uuid=item.id %}">{{ item.created_at }}</a>
                 </td>
                 <td>
                     {{ item.team.name }}
@@ -28,7 +32,7 @@
                 </td>
             </tr>
         {% empty %}
-            <tr>No results yet.</tr>
+            <tr><td>All results are coded.</td></tr>
         {% endfor %}
     </tbody>
   </table>

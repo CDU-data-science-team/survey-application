@@ -72,6 +72,10 @@ class Rating(QuestionOption):
     pass
 
 
+class CommentsCode(QuestionOption):
+    pass
+
+
 class DemographicsMixin(models.Model):
     """
     Mixin for demographic fields.
@@ -159,15 +163,50 @@ class Person(BaseModel):
     Base class for all forms.
     """
 
+    class Meta:
+        ordering = ["updated_at"]
+
     team = models.ForeignKey(Team, on_delete=models.PROTECT)
     added_by = models.ForeignKey(CustomUser, on_delete=models.PROTECT, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     comments_good = models.TextField(null=True, blank=True, help_text="What was good?")
+    best_code_1 = models.ForeignKey(
+        CommentsCode,
+        related_name="best1",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+    )
+    best_code_2 = models.ForeignKey(
+        CommentsCode,
+        related_name="best2",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+    )
+    positivity = models.PositiveIntegerField(null=True, blank=True)
+
     comments_better = models.TextField(
         null=True, blank=True, help_text="What could we do better?"
     )
+    improve_code_1 = models.ForeignKey(
+        CommentsCode,
+        related_name="improve1",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+    )
+    improve_code_2 = models.ForeignKey(
+        CommentsCode,
+        related_name="improve2",
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+    )
+    criticality = models.PositiveIntegerField(null=True, blank=True)
+
     comments_public = models.BooleanField(
         null=True,
         blank=True,
