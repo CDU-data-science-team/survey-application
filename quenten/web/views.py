@@ -3,12 +3,13 @@ from typing import Any, Dict, Optional
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.db.models.query import QuerySet
+from django.forms import Form
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, FormView, ListView, UpdateView
 
-from .forms import AdultForm, CodeForm, TeamForm
+from .forms import AdultForm, ChildForm, CodeForm, TeamForm
 from .models import Accessible, Adult, Carer, Child, Person, Team, YoungCarer
 
 
@@ -38,22 +39,38 @@ class TeamSelectView(LoginRequiredMixin, FormView):
         return super().get_success_url()
 
 
-class AdultCreateView(LoginRequiredMixin, CreateView):
+class PersonCreateView(LoginRequiredMixin, CreateView):
     """
     Form view to create adult form response.
     Further forms can follow this template.
     """
 
-    model = Adult
-    form_class = AdultForm
+    model = None
+    form_class = None
     template_name = "forms/person_form.html"
     success_url = "/"
+
+    def setup(self, request: HttpRequest, *args: Any, **kwargs: Any) -> None:
+        """
+        Override to set the model and form based on the url name.
+        """
+        url_name = request.resolver_match.url_name
+
+        if url_name == "adult-new":
+            self.model = Adult
+            self.form_class = AdultForm
+
+        elif url_name == "child-new":
+            self.model = Child
+            self.form_class = ChildForm
+
+        return super().setup(request, *args, **kwargs)
 
     def get_form_kwargs(self) -> Dict[str, Any]:
         """
         Override to add additional request parameters for form and team.
         """
-        kwargs = super(AdultCreateView, self).get_form_kwargs()
+        kwargs = super(PersonCreateView, self).get_form_kwargs()
         kwargs["request"] = self.request
 
         team_id = self.request.session.get("team")
@@ -61,35 +78,47 @@ class AdultCreateView(LoginRequiredMixin, CreateView):
             team_object = Team.objects.filter(id=team_id).first()
             kwargs["team"] = team_object
             self.extra_context = {
+                "code": team_object.code,
                 "name": team_object.name,
-                "address": team_object.district,
+                "directorate": team_object.directorate,
             }
         return kwargs
 
 
-class AdultUpdateView(LoginRequiredMixin, UpdateView):
+class PersonUpdateView(LoginRequiredMixin, UpdateView):
     """
     Update view.
     """
 
-    model = Adult
-    form_class = AdultForm
+    model = Person
+    form_class = None
     template_name: str = "forms/person_form.html"
     success_url = "/"
 
-    def get_object(self) -> Adult:
-        return Adult.objects.get(id=self.kwargs.get("uuid"))
+    def get_object(self) -> Person:
+        return Person.objects.get_subclass(id=self.kwargs.get("uuid"))
+
+    def get_form_class(self) -> Form:
+        if type(self.object) == Adult:
+            self.form_class = AdultForm
+        if type(self.object) == Child:
+            self.form_class = ChildForm
+        return super().get_form_class()
 
     def get_form_kwargs(self) -> Dict[str, Any]:
         """
         Override to add additional request parameters for form and team.
         """
-        kwargs = super(AdultUpdateView, self).get_form_kwargs()
+        kwargs = super(PersonUpdateView, self).get_form_kwargs()
         kwargs["request"] = self.request
 
         team_object = self.object.team
         kwargs["team"] = self.object.team
-        self.extra_context = {"name": team_object.name, "address": team_object.district}
+        self.extra_context = {
+            "code": team_object.code,
+            "name": team_object.name,
+            "directorate": team_object.directorate,
+        }
         return kwargs
 
 
@@ -105,7 +134,7 @@ class ResultsListView(LoginRequiredMixin, ListView):
         """
         Override.
         """
-        return Person.objects.order_by("-created_at")
+        return Person.objects.select_subclasses(Adult, Child).order_by("-created_at")
 
 
 class UncodedListView(LoginRequiredMixin, ListView):

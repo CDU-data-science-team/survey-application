@@ -1,6 +1,7 @@
 import uuid
 
 from django.db import models
+from model_utils.managers import InheritanceManager
 from users.models import CustomUser
 
 
@@ -56,6 +57,10 @@ class Age(QuestionOption):
     pass
 
 
+class ChildAge(QuestionOption):
+    pass
+
+
 class Relationship(QuestionOption):
     pass
 
@@ -72,6 +77,10 @@ class Rating(QuestionOption):
     pass
 
 
+class ChildRating(QuestionOption):
+    pass
+
+
 class CommentsCode(QuestionOption):
     pass
 
@@ -84,20 +93,24 @@ class DemographicsMixin(models.Model):
     class Meta:
         abstract = True
 
-    gender = models.ForeignKey(Gender, on_delete=models.PROTECT)
-    ethnic_group = models.ForeignKey(EthnicGroup, on_delete=models.PROTECT)
+    gender = models.ForeignKey(Gender, on_delete=models.PROTECT, null=True)
+    ethnic_group = models.ForeignKey(EthnicGroup, on_delete=models.PROTECT, null=True)
     disability = models.ForeignKey(
         Disability,
         on_delete=models.PROTECT,
         help_text="Do you have a long term disability or a long-term health condition which affects your day to day activities?",
+        null=True,
     )
-    religion = models.ForeignKey(Religion, on_delete=models.PROTECT)
-    sexual_orientation = models.ForeignKey(SexualOrientation, on_delete=models.PROTECT)
-    age = models.ForeignKey(Age, on_delete=models.PROTECT)
+    religion = models.ForeignKey(Religion, on_delete=models.PROTECT, null=True)
+    sexual_orientation = models.ForeignKey(
+        SexualOrientation, on_delete=models.PROTECT, null=True
+    )
+    age = models.ForeignKey(Age, on_delete=models.PROTECT, null=True)
     relationship = models.ForeignKey(
         Relationship,
         on_delete=models.PROTECT,
         help_text="What is your relationship status?",
+        null=True,
     )
 
 
@@ -155,7 +168,7 @@ class Team(BaseModel):
     fft_category = models.CharField(max_length=60, null=True, blank=True)
 
     def __str__(self) -> str:
-        return f"{self.code}, {self.name}, {self.district}"
+        return f"{self.code}, {self.name}, {self.directorate}"
 
 
 class Person(BaseModel):
@@ -165,6 +178,8 @@ class Person(BaseModel):
 
     class Meta:
         ordering = ["updated_at"]
+
+    objects = InheritanceManager()
 
     team = models.ForeignKey(Team, on_delete=models.PROTECT)
     added_by = models.ForeignKey(CustomUser, on_delete=models.PROTECT, editable=False)
@@ -266,12 +281,60 @@ class Adult(Person, DemographicsMixin, PregnancyMixin):
     )
 
 
-class Child(Person):
+class Child(Person, DemographicsMixin):
     """
     Child survey form.
     """
 
-    pass
+    class Meta:
+        pass
+
+    carer_type = models.ForeignKey(
+        ServiceUser, on_delete=models.PROTECT, help_text="I am a: ", null=True
+    )
+    experience = models.ForeignKey(
+        Rating,
+        related_name="child_experience",
+        on_delete=models.PROTECT,
+        help_text="Overall, how was your experience of our service?",
+        null=True,
+    )
+    listening = models.ForeignKey(
+        ChildRating,
+        related_name="child_listening",
+        on_delete=models.PROTECT,
+        help_text="How good were our services at listening to you?",
+        null=True,
+    )
+    explaining = models.ForeignKey(
+        ChildRating,
+        related_name="child_explaining",
+        on_delete=models.PROTECT,
+        help_text="How good were our services at explaining information clearly?",
+        null=True,
+    )
+    kind = models.ForeignKey(
+        ChildRating,
+        related_name="child_kind",
+        on_delete=models.PROTECT,
+        help_text="How good were our services at being kind to you?",
+        null=True,
+    )
+    treatment = models.ForeignKey(
+        ChildRating,
+        related_name="child_treatment",
+        on_delete=models.PROTECT,
+        help_text="How good were our services at involving you in decisions about your care or treatment?",
+        null=True,
+    )
+    positive = models.ForeignKey(
+        ChildRating,
+        related_name="child_positive",
+        on_delete=models.PROTECT,
+        help_text="How good were our services at making a positive difference to your health and wellbeing?",
+        null=True,
+    )
+    age = models.ForeignKey(ChildAge, on_delete=models.PROTECT, null=True)
 
 
 class Carer(Person):
