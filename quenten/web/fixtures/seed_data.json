@@ -612,6 +612,105 @@
         }
     },
     {
+        "model": "web.contactgeneric",
+        "pk": null,
+        "fields": {
+            "name": "Yes",
+            "value": "Y",
+            "sort_order": 1
+        }
+    },
+    {
+        "model": "web.contactgeneric",
+        "pk": null,
+        "fields": {
+            "name": "No",
+            "value": "N",
+            "sort_order": 2
+        }
+    },
+    {
+        "model": "web.contactgeneric",
+        "pk": null,
+        "fields": {
+            "name": "Don't know",
+            "value": "DK",
+            "sort_order": 3
+        }
+    },
+    {
+        "model": "web.carertype",
+        "pk": null,
+        "fields": {
+            "name": "With Mental Health issues",
+            "value": "MH",
+            "sort_order": 1
+        }
+    },
+    {
+        "model": "web.carertype",
+        "pk": null,
+        "fields": {
+            "name": "With a physical heatlh condition",
+            "value": "PH",
+            "sort_order": 2
+        }
+    },
+    {
+        "model": "web.carertype",
+        "pk": null,
+        "fields": {
+            "name": "With a substance misuse issue",
+            "value": "SM",
+            "sort_order": 3
+        }
+    },
+    {
+        "model": "web.carertype",
+        "pk": null,
+        "fields": {
+            "name": "With an eating disorder",
+            "value": "ED",
+            "sort_order": 4
+        }
+    },
+    {
+        "model": "web.carertype",
+        "pk": null,
+        "fields": {
+            "name": "With a Learning Disability",
+            "value": "LD",
+            "sort_order": 5
+        }
+    },
+    {
+        "model": "web.carertype",
+        "pk": null,
+        "fields": {
+            "name": "With Dementia",
+            "value": "D",
+            "sort_order": 6
+        }
+    },
+    {
+        "model": "web.carertype",
+        "pk": null,
+        "fields": {
+            "name": "At the end of life",
+            "value": "EOL",
+            "sort_order": 7
+        }
+    },
+    {
+        "model": "web.carertype",
+        "pk": null,
+        "fields": {
+            "name": "I am a young carer",
+            "value": "YC",
+            "sort_order": 8
+        }
+    },
+    {
         "model": "web.directorate",
         "pk": "366f58db-2c17-4db0-802f-7822112a8af7",
         "fields": {

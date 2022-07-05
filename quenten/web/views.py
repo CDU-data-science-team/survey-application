@@ -9,7 +9,15 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, FormView, ListView, UpdateView
 
-from .forms import AdultForm, ChildForm, CodeForm, TeamForm
+from .forms import (
+    AccessibleForm,
+    AdultForm,
+    CarerForm,
+    ChildForm,
+    CodeForm,
+    TeamForm,
+    YoungCarerForm,
+)
 from .models import Accessible, Adult, Carer, Child, Person, Team, YoungCarer
 
 
@@ -59,10 +67,18 @@ class PersonCreateView(LoginRequiredMixin, CreateView):
         if url_name == "adult-new":
             self.model = Adult
             self.form_class = AdultForm
-
         elif url_name == "child-new":
             self.model = Child
             self.form_class = ChildForm
+        elif url_name == "young-carer-new":
+            self.model = YoungCarer
+            self.form_class = YoungCarerForm
+        elif url_name == "carer-new":
+            self.model = Carer
+            self.form_class = CarerForm
+        elif url_name == "accessible-new":
+            self.model = Accessible
+            self.form_class = AccessibleForm
 
         return super().setup(request, *args, **kwargs)
 
@@ -93,7 +109,7 @@ class PersonUpdateView(LoginRequiredMixin, UpdateView):
     model = Person
     form_class = None
     template_name: str = "forms/person_form.html"
-    success_url = "/"
+    success_url = "/results/"
 
     def get_object(self) -> Person:
         return Person.objects.get_subclass(id=self.kwargs.get("uuid"))
@@ -103,6 +119,12 @@ class PersonUpdateView(LoginRequiredMixin, UpdateView):
             self.form_class = AdultForm
         if type(self.object) == Child:
             self.form_class = ChildForm
+        if type(self.object) == YoungCarer:
+            self.form_class = YoungCarerForm
+        if type(self.object) == Carer:
+            self.form_class = CarerForm
+        if type(self.object) == Accessible:
+            self.form_class = AccessibleForm
         return super().get_form_class()
 
     def get_form_kwargs(self) -> Dict[str, Any]:
@@ -134,7 +156,13 @@ class ResultsListView(LoginRequiredMixin, ListView):
         """
         Override.
         """
-        return Person.objects.select_subclasses(Adult, Child).order_by("-created_at")
+        return (
+            Person.objects.select_subclasses(
+                Adult, Child, YoungCarer, Carer, Accessible
+            )
+            .prefetch_related("team", "added_by")
+            .order_by("-created_at")
+        )
 
 
 class UncodedListView(LoginRequiredMixin, ListView):
@@ -159,7 +187,7 @@ class UncodedListView(LoginRequiredMixin, ListView):
                 | Q(improve_code_2__isnull=True)
             )
         )
-        return q.order_by("-created_at")
+        return q.prefetch_related("team", "added_by").order_by("-created_at")
 
 
 class UncodedUpdateView(LoginRequiredMixin, UpdateView):

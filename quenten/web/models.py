@@ -85,6 +85,14 @@ class CommentsCode(QuestionOption):
     pass
 
 
+class ContactGeneric(QuestionOption):
+    pass
+
+
+class CarerType(QuestionOption):
+    pass
+
+
 class DemographicsMixin(models.Model):
     """
     Mixin for demographic fields.
@@ -337,20 +345,144 @@ class Child(Person, DemographicsMixin):
     age = models.ForeignKey(ChildAge, on_delete=models.PROTECT, null=True)
 
 
-class Carer(Person):
+class Carer(Person, DemographicsMixin):
     """
     Carer survey form.
     """
 
-    pass
+    class Meta:
+        pass
+
+    experience = models.ForeignKey(
+        Rating,
+        related_name="carer_experience",
+        on_delete=models.PROTECT,
+        help_text="Overall, how was your experience of our service?",
+        null=True,
+    )
+    listening = models.ForeignKey(
+        Rating,
+        related_name="carer_listening",
+        on_delete=models.PROTECT,
+        help_text="How good were our services at listening to you?",
+        null=True,
+    )
+    explaining = models.ForeignKey(
+        Rating,
+        related_name="carer_explaining",
+        on_delete=models.PROTECT,
+        help_text="How good were our services at explaining information clearly?",
+        null=True,
+    )
+    kind = models.ForeignKey(
+        Rating,
+        related_name="carer_kind",
+        on_delete=models.PROTECT,
+        help_text="How good were our services at being kind to you?",
+        null=True,
+    )
+    treatment = models.ForeignKey(
+        Rating,
+        related_name="carer_treatment",
+        on_delete=models.PROTECT,
+        help_text="How good were our services at involving you in decisions about the care and treatment of the person you care for?",
+        null=True,
+    )
+    support = models.ForeignKey(
+        Rating,
+        related_name="carer_support",
+        on_delete=models.PROTECT,
+        help_text="How good were our services at giving you information about support for you as a carer?",
+        null=True,
+    )
+    worried = models.ForeignKey(
+        ContactGeneric,
+        related_name="carer_worried",
+        on_delete=models.PROTECT,
+        help_text="Did our services tell you who you could contact if you were worried about the person you care for?",
+        null=True,
+    )
+    assessment = models.ForeignKey(
+        ContactGeneric,
+        related_name="carer_assessment",
+        on_delete=models.PROTECT,
+        help_text="Did we tell you who to contact for a carers assessment?",
+        null=True,
+    )
+    carer_type = models.ForeignKey(
+        CarerType,
+        related_name="carer_type",
+        on_delete=models.PROTECT,
+        help_text="I am a carer, family member, friend, parent or guardian of someone:",
+        null=True,
+    )
 
 
-class YoungCarer(Person):
+class YoungCarer(Person, DemographicsMixin):
     """
     Young carer survey form.
     """
 
-    pass
+    class Meta:
+        pass
+
+    experience = models.ForeignKey(
+        Rating,
+        related_name="young_carer_experience",
+        on_delete=models.PROTECT,
+        help_text="Overall, how was your experience of our service?",
+        null=True,
+    )
+    listening = models.ForeignKey(
+        ChildRating,
+        related_name="young_carer_listening",
+        on_delete=models.PROTECT,
+        help_text="Were our services good at listening to you?",
+        null=True,
+    )
+    explaining = models.ForeignKey(
+        ChildRating,
+        related_name="young_carer_explaining",
+        on_delete=models.PROTECT,
+        help_text="Were our services good at explaining things clearly?",
+        null=True,
+    )
+    kind = models.ForeignKey(
+        ChildRating,
+        related_name="young_carer_kind",
+        on_delete=models.PROTECT,
+        help_text="Were our services good at being kind to you?",
+        null=True,
+    )
+    involving = models.ForeignKey(
+        ChildRating,
+        related_name="young_carer_involving",
+        on_delete=models.PROTECT,
+        help_text="Were our services good at involving you in the way we helped the person you care for?",
+        null=True,
+    )
+    talking = models.ForeignKey(
+        ChildRating,
+        related_name="young_carer_talking",
+        on_delete=models.PROTECT,
+        help_text="Were our services good at talking to you about the support you could have as a carer?",
+        null=True,
+    )
+    worried = models.ForeignKey(
+        ChildRating,
+        related_name="young_carer_worried",
+        on_delete=models.PROTECT,
+        help_text="Did our services tell you who you could contact if you were worried about the person you care for?",
+        null=True,
+    )
+    assessment = models.ForeignKey(
+        ChildRating,
+        related_name="young_carer_assessment",
+        on_delete=models.PROTECT,
+        help_text="Did we tell you who to contact for a carers assessment?",
+        null=True,
+    )
+    age = models.ForeignKey(ChildAge, on_delete=models.PROTECT, null=True)
 
 
 class Accessible(Person):
@@ -358,4 +490,54 @@ class Accessible(Person):
     Accessible survey form.
     """
 
-    pass
+    class Meta:
+        pass
+
+    carer_type = models.ForeignKey(
+        ServiceUser,
+        on_delete=models.PROTECT,
+        help_text="I am a: ",
+        null=True,
+    )
+    experience = models.ForeignKey(
+        ChildRating,
+        related_name="accessible_experience",
+        on_delete=models.PROTECT,
+        help_text="Did you have a good experience from our staff?",
+        null=True,
+    )
+    listening = models.ForeignKey(
+        ChildRating,
+        related_name="accessible_listening",
+        on_delete=models.PROTECT,
+        help_text="Did our staff listen to you?",
+        null=True,
+    )
+    explaining = models.ForeignKey(
+        ChildRating,
+        related_name="accessible_explaining",
+        on_delete=models.PROTECT,
+        help_text="Did our staff explain things clearly?",
+        null=True,
+    )
+    kind = models.ForeignKey(
+        ChildRating,
+        related_name="accessible_kind",
+        on_delete=models.PROTECT,
+        help_text="Were our staff kind to you?",
+        null=True,
+    )
+    ask = models.ForeignKey(
+        ChildRating,
+        related_name="accessible_ask",
+        on_delete=models.PROTECT,
+        help_text="Did our staff ask you what you wanted?",
+        null=True,
+    )
+    better = models.ForeignKey(
+        ChildRating,
+        related_name="accessible_better",
+        on_delete=models.PROTECT,
+        help_text="Did our staff help you feel better?",
+        null=True,
+    )
