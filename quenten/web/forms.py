@@ -1,6 +1,4 @@
 # forms.py
-from typing import Any
-
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Div, Field, Layout, Submit
 from django import forms
@@ -8,7 +6,7 @@ from django import forms
 from .models import Accessible, Adult, Carer, Child, Person, YoungCarer
 
 
-class TeamForm(forms.Form):
+class PersonSelectForm(forms.Form):
     """
     Form to select team and post data.
     """

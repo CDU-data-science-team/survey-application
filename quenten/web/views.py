@@ -16,21 +16,21 @@ from .forms import (
     CarerForm,
     ChildForm,
     CodeForm,
-    TeamForm,
+    PersonSelectForm,
     YoungCarerForm,
 )
 from .models import Accessible, Adult, Carer, Child, Person, YoungCarer
 
 
-class TeamSelectView(LoginRequiredMixin, FormView):
+class PersonSelectView(LoginRequiredMixin, FormView):
     """
-    Form view for selecting the team and redirecting on form choice.
+    Form view for selecting and redirecting on the form choice.
     """
 
-    form_class = TeamForm
+    form_class = PersonSelectForm
     template_name = "forms/team_form.html"
 
-    def form_valid(self, form: TeamForm) -> HttpResponseRedirect:
+    def form_valid(self, form: PersonSelectForm) -> HttpResponseRedirect:
         """
         Override to pass data to the next form.
         """
