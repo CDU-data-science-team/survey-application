@@ -5,7 +5,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Div, Field, Layout, Submit
 from django import forms
 
-from .models import Accessible, Adult, Carer, Child, Person, Team, YoungCarer
+from .models import Accessible, Adult, Carer, Child, Person, YoungCarer
 
 
 class TeamForm(forms.Form):
@@ -20,10 +20,6 @@ class TeamForm(forms.Form):
         ("youngcarer", "Young Carers Form"),
         ("accessible", "Accessible Form"),
     ]
-    teams = Team.objects.all()
-    team = forms.ModelChoiceField(
-        queryset=teams, widget=forms.Select(attrs={"autofocus": "autofocus"})
-    )
     choice = forms.ChoiceField(choices=_FORMS, widget=forms.RadioSelect)
 
     def __init__(self, *args, **kwargs):
@@ -31,12 +27,6 @@ class TeamForm(forms.Form):
         self.helper = FormHelper()
         self.helper.form_method = "post"
         self.helper.layout = Layout(
-            Field(
-                "team",
-                wrapper_class="col-md-4",
-                css_class="form-control",
-                autofocus="autofocus",
-            ),
             Field("choice", wrapper_class="col-md-4 mt-3", css_class="form-control"),
             Submit("submit", "Submit", css_class="mt-3"),
         )
@@ -46,6 +36,7 @@ class AdultForm(forms.ModelForm):
     class Meta:
         model = Adult
         fields = (
+            "team",
             "carer_type",
             "experience",
             "listening",
@@ -69,13 +60,18 @@ class AdultForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        self.team_object = kwargs.pop("team", "")
 
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = "post"
         self.helper.layout = Layout(
             Div(
+                Field(
+                    "team",
+                    wrapper_class="col-md-4",
+                    css_class="form-control",
+                    autofocus="autofocus",
+                ),
                 Field(
                     "carer_type",
                     wrapper_class="col-md-4",
@@ -149,7 +145,6 @@ class AdultForm(forms.ModelForm):
         """
         instance = super().save(commit=False)
         instance.added_by = self.request.user
-        instance.team = self.team_object
 
         if commit:
             instance.save()
@@ -160,6 +155,7 @@ class ChildForm(forms.ModelForm):
     class Meta:
         model = Child
         fields = (
+            "team",
             "carer_type",
             "experience",
             "listening",
@@ -179,13 +175,18 @@ class ChildForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        self.team_object = kwargs.pop("team", "")
 
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = "post"
         self.helper.layout = Layout(
             Div(
+                Field(
+                    "team",
+                    wrapper_class="col-md-4",
+                    css_class="form-control",
+                    autofocus="autofocus",
+                ),
                 Field(
                     "carer_type",
                     wrapper_class="col-md-4",
@@ -246,7 +247,6 @@ class ChildForm(forms.ModelForm):
         """
         instance = super().save(commit=False)
         instance.added_by = self.request.user
-        instance.team = self.team_object
 
         if commit:
             instance.save()
@@ -257,6 +257,7 @@ class YoungCarerForm(forms.ModelForm):
     class Meta:
         model = YoungCarer
         fields = (
+            "team",
             "experience",
             "listening",
             "explaining",
@@ -277,13 +278,18 @@ class YoungCarerForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        self.team_object = kwargs.pop("team", "")
 
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = "post"
         self.helper.layout = Layout(
             Div(
+                Field(
+                    "team",
+                    wrapper_class="col-md-4",
+                    css_class="form-control",
+                    autofocus="autofocus",
+                ),
                 Field(
                     "experience",
                     wrapper_class="col-md-4",
@@ -345,7 +351,6 @@ class YoungCarerForm(forms.ModelForm):
         """
         instance = super().save(commit=False)
         instance.added_by = self.request.user
-        instance.team = self.team_object
 
         if commit:
             instance.save()
@@ -356,6 +361,7 @@ class CarerForm(forms.ModelForm):
     class Meta:
         model = Carer
         fields = (
+            "team",
             "experience",
             "listening",
             "explaining",
@@ -379,13 +385,18 @@ class CarerForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        self.team_object = kwargs.pop("team", "")
 
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = "post"
         self.helper.layout = Layout(
             Div(
+                Field(
+                    "team",
+                    wrapper_class="col-md-4",
+                    css_class="form-control",
+                    autofocus="autofocus",
+                ),
                 Field(
                     "experience",
                     wrapper_class="col-md-4",
@@ -459,7 +470,6 @@ class CarerForm(forms.ModelForm):
         """
         instance = super().save(commit=False)
         instance.added_by = self.request.user
-        instance.team = self.team_object
 
         if commit:
             instance.save()
@@ -470,6 +480,7 @@ class AccessibleForm(forms.ModelForm):
     class Meta:
         model = Accessible
         fields = (
+            "team",
             "carer_type",
             "experience",
             "listening",
@@ -483,13 +494,18 @@ class AccessibleForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        self.team_object = kwargs.pop("team", "")
 
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = "post"
         self.helper.layout = Layout(
             Div(
+                Field(
+                    "team",
+                    wrapper_class="col-md-4",
+                    css_class="form-control",
+                    autofocus="autofocus",
+                ),
                 Field(
                     "carer_type",
                     wrapper_class="col-md-4",
@@ -534,7 +550,6 @@ class AccessibleForm(forms.ModelForm):
         """
         instance = super().save(commit=False)
         instance.added_by = self.request.user
-        instance.team = self.team_object
 
         if commit:
             instance.save()
@@ -558,7 +573,6 @@ class CodeForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        self.team_object = kwargs.pop("team", "")
 
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
