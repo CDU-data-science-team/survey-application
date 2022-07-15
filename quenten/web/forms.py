@@ -59,7 +59,6 @@ class AdultForm(forms.ModelForm):
         )
 
     def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop("request")
 
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -72,11 +71,13 @@ class AdultForm(forms.ModelForm):
                     css_class="form-control",
                     autofocus="autofocus",
                 ),
+                css_class="row",
+            ),
+            Div(
                 Field(
                     "carer_type",
                     wrapper_class="col-md-4",
                     css_class="form-control",
-                    autofocus="autofocus",
                 ),
                 css_class="row",
             ),
@@ -139,17 +140,6 @@ class AdultForm(forms.ModelForm):
             Submit("submit", "Submit", css_class="mt-3"),
         )
 
-    def save(self, commit=True) -> Any:
-        """
-        Override to add hidden fields
-        """
-        instance = super().save(commit=False)
-        instance.added_by = self.request.user
-
-        if commit:
-            instance.save()
-        return instance
-
 
 class ChildForm(forms.ModelForm):
     class Meta:
@@ -174,7 +164,6 @@ class ChildForm(forms.ModelForm):
         )
 
     def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop("request")
 
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -187,11 +176,13 @@ class ChildForm(forms.ModelForm):
                     css_class="form-control",
                     autofocus="autofocus",
                 ),
+                css_class="row",
+            ),
+            Div(
                 Field(
                     "carer_type",
                     wrapper_class="col-md-4",
                     css_class="form-control",
-                    autofocus="autofocus",
                 ),
                 css_class="row",
             ),
@@ -241,17 +232,6 @@ class ChildForm(forms.ModelForm):
             Submit("submit", "Submit", css_class="mt-3"),
         )
 
-    def save(self, commit=True) -> Any:
-        """
-        Override to add hidden fields
-        """
-        instance = super().save(commit=False)
-        instance.added_by = self.request.user
-
-        if commit:
-            instance.save()
-        return instance
-
 
 class YoungCarerForm(forms.ModelForm):
     class Meta:
@@ -277,7 +257,6 @@ class YoungCarerForm(forms.ModelForm):
         )
 
     def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop("request")
 
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -290,11 +269,13 @@ class YoungCarerForm(forms.ModelForm):
                     css_class="form-control",
                     autofocus="autofocus",
                 ),
+                css_class="row",
+            ),
+            Div(
                 Field(
                     "experience",
                     wrapper_class="col-md-4",
                     css_class="form-control",
-                    autofocus="autofocus",
                 ),
                 Field("listening", wrapper_class="col-md-4", css_class="form-control"),
                 Field("explaining", wrapper_class="col-md-4", css_class="form-control"),
@@ -345,17 +326,6 @@ class YoungCarerForm(forms.ModelForm):
             Submit("submit", "Submit", css_class="mt-3"),
         )
 
-    def save(self, commit=True) -> Any:
-        """
-        Override to add hidden fields
-        """
-        instance = super().save(commit=False)
-        instance.added_by = self.request.user
-
-        if commit:
-            instance.save()
-        return instance
-
 
 class CarerForm(forms.ModelForm):
     class Meta:
@@ -384,7 +354,6 @@ class CarerForm(forms.ModelForm):
         )
 
     def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop("request")
 
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -397,11 +366,13 @@ class CarerForm(forms.ModelForm):
                     css_class="form-control",
                     autofocus="autofocus",
                 ),
+                css_class="row",
+            ),
+            Div(
                 Field(
                     "experience",
                     wrapper_class="col-md-4",
                     css_class="form-control",
-                    autofocus="autofocus",
                 ),
                 Field("listening", wrapper_class="col-md-4", css_class="form-control"),
                 Field("explaining", wrapper_class="col-md-4", css_class="form-control"),
@@ -464,17 +435,6 @@ class CarerForm(forms.ModelForm):
             Submit("submit", "Submit", css_class="mt-3"),
         )
 
-    def save(self, commit=True) -> Any:
-        """
-        Override to add hidden fields
-        """
-        instance = super().save(commit=False)
-        instance.added_by = self.request.user
-
-        if commit:
-            instance.save()
-        return instance
-
 
 class AccessibleForm(forms.ModelForm):
     class Meta:
@@ -493,7 +453,6 @@ class AccessibleForm(forms.ModelForm):
         )
 
     def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop("request")
 
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -506,11 +465,13 @@ class AccessibleForm(forms.ModelForm):
                     css_class="form-control",
                     autofocus="autofocus",
                 ),
+                css_class="row",
+            ),
+            Div(
                 Field(
                     "carer_type",
                     wrapper_class="col-md-4",
                     css_class="form-control",
-                    autofocus="autofocus",
                 ),
                 css_class="row",
             ),
@@ -544,17 +505,6 @@ class AccessibleForm(forms.ModelForm):
             Submit("submit", "Submit", css_class="mt-3"),
         )
 
-    def save(self, commit=True) -> Any:
-        """
-        Override to add hidden fields
-        """
-        instance = super().save(commit=False)
-        instance.added_by = self.request.user
-
-        if commit:
-            instance.save()
-        return instance
-
 
 class CodeForm(forms.ModelForm):
     class Meta:
@@ -572,7 +522,6 @@ class CodeForm(forms.ModelForm):
         )
 
     def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop("request")
 
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
