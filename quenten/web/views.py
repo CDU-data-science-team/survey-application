@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
@@ -19,7 +19,7 @@ from .forms import (
     TeamForm,
     YoungCarerForm,
 )
-from .models import Accessible, Adult, Carer, Child, Person, Team, YoungCarer
+from .models import Accessible, Adult, Carer, Child, Person, YoungCarer
 
 
 class TeamSelectView(LoginRequiredMixin, FormView):
@@ -35,8 +35,6 @@ class TeamSelectView(LoginRequiredMixin, FormView):
         Override to pass data to the next form.
         """
         self.form = form
-        team = form.cleaned_data["team"].id
-        self.request.session["team"] = str(team)
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self) -> str:
@@ -83,23 +81,9 @@ class PersonCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 
         return super().setup(request, *args, **kwargs)
 
-    def get_form_kwargs(self) -> Dict[str, Any]:
-        """
-        Override to add additional request parameters for form and team.
-        """
-        kwargs = super(PersonCreateView, self).get_form_kwargs()
-        kwargs["request"] = self.request
-
-        team_id = self.request.session.get("team")
-        if team_id is not None:
-            team_object = Team.objects.filter(id=team_id).first()
-            kwargs["team"] = team_object
-            self.extra_context = {
-                "code": team_object.code,
-                "name": team_object.name,
-                "directorate": team_object.directorate,
-            }
-        return kwargs
+    def form_valid(self, form: Any) -> HttpResponse:
+        form.instance.added_by = self.request.user
+        return super().form_valid(form)
 
     def get_success_message(self, cleaned_data: Dict[str, str]) -> str:
         return f"Submission successful. id: {self.object.id}"
@@ -131,21 +115,9 @@ class PersonUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
             self.form_class = AccessibleForm
         return super().get_form_class()
 
-    def get_form_kwargs(self) -> Dict[str, Any]:
-        """
-        Override to add additional request parameters for form and team.
-        """
-        kwargs = super(PersonUpdateView, self).get_form_kwargs()
-        kwargs["request"] = self.request
-
-        team_object = self.object.team
-        kwargs["team"] = self.object.team
-        self.extra_context = {
-            "code": team_object.code,
-            "name": team_object.name,
-            "directorate": team_object.directorate,
-        }
-        return kwargs
+    def form_valid(self, form: AdultForm) -> HttpResponse:
+        form.instance.added_by = self.request.user
+        return super().form_valid(form)
 
     def get_success_message(self, cleaned_data: Dict[str, str]) -> str:
         return f"Update successful. id: {self.object.id}"
@@ -208,18 +180,6 @@ class UncodedUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_object(self) -> Person:
         return Person.objects.get(id=self.kwargs.get("uuid"))
-
-    def get_form_kwargs(self) -> Dict[str, Any]:
-        """
-        Override to add additional request parameters for form and team.
-        """
-        kwargs = super(UncodedUpdateView, self).get_form_kwargs()
-        kwargs["request"] = self.request
-
-        team_object = self.object.team
-        kwargs["team"] = self.object.team
-        self.extra_context = {"name": team_object.name, "address": team_object.district}
-        return kwargs
 
     def get_success_url(self) -> str:
         return (
