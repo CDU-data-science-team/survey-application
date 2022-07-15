@@ -101,23 +101,29 @@ class DemographicsMixin(models.Model):
     class Meta:
         abstract = True
 
-    gender = models.ForeignKey(Gender, on_delete=models.PROTECT, null=True)
-    ethnic_group = models.ForeignKey(EthnicGroup, on_delete=models.PROTECT, null=True)
+    gender = models.ForeignKey(Gender, on_delete=models.PROTECT, blank=True, null=True)
+    ethnic_group = models.ForeignKey(
+        EthnicGroup, on_delete=models.PROTECT, blank=True, null=True
+    )
     disability = models.ForeignKey(
         Disability,
         on_delete=models.PROTECT,
         help_text="Do you have a long term disability or a long-term health condition which affects your day to day activities?",
+        blank=True,
         null=True,
     )
-    religion = models.ForeignKey(Religion, on_delete=models.PROTECT, null=True)
-    sexual_orientation = models.ForeignKey(
-        SexualOrientation, on_delete=models.PROTECT, null=True
+    religion = models.ForeignKey(
+        Religion, on_delete=models.PROTECT, blank=True, null=True
     )
-    age = models.ForeignKey(Age, on_delete=models.PROTECT, null=True)
+    sexual_orientation = models.ForeignKey(
+        SexualOrientation, on_delete=models.PROTECT, blank=True, null=True
+    )
+    age = models.ForeignKey(Age, on_delete=models.PROTECT, blank=True, null=True)
     relationship = models.ForeignKey(
         Relationship,
         on_delete=models.PROTECT,
         help_text="What is your relationship status?",
+        blank=True,
         null=True,
     )
 
@@ -135,12 +141,16 @@ class PregnancyMixin(models.Model):
         related_name="pregnant",
         on_delete=models.PROTECT,
         help_text="Are you pregnant at this time?",
+        blank=True,
+        null=True,
     )
     baby = models.ForeignKey(
         Pregnant,
         related_name="baby",
         on_delete=models.PROTECT,
         help_text="Have you had a baby within the last 26 weeks?",
+        blank=True,
+        null=True,
     )
 
 
@@ -249,43 +259,59 @@ class Adult(Person, DemographicsMixin, PregnancyMixin):
         pass
 
     carer_type = models.ForeignKey(
-        ServiceUser, on_delete=models.PROTECT, help_text="I am a: "
+        ServiceUser,
+        on_delete=models.PROTECT,
+        help_text="I am a: ",
+        blank=True,
+        null=True,
     )
     experience = models.ForeignKey(
         Rating,
         related_name="experience",
         on_delete=models.PROTECT,
         help_text="Overall, how was your experience of our service?",
+        blank=True,
+        null=True,
     )
     listening = models.ForeignKey(
         Rating,
         related_name="listening",
         on_delete=models.PROTECT,
         help_text="How good were our services at listening to you?",
+        blank=True,
+        null=True,
     )
     explaining = models.ForeignKey(
         Rating,
         related_name="explaining",
         on_delete=models.PROTECT,
         help_text="How good were our services at explaining information clearly?",
+        blank=True,
+        null=True,
     )
     kind = models.ForeignKey(
         Rating,
         related_name="kind",
         on_delete=models.PROTECT,
         help_text="How good were our services at being kind to you?",
+        blank=True,
+        null=True,
     )
     treatment = models.ForeignKey(
         Rating,
         related_name="treatment",
         on_delete=models.PROTECT,
         help_text="How good were our services at involving you in decisions about your care or treatment?",
+        blank=True,
+        null=True,
     )
     positive = models.ForeignKey(
         Rating,
         related_name="positive",
         on_delete=models.PROTECT,
         help_text="How good were our services at making a positive difference to your health and wellbeing?",
+        blank=True,
+        null=True,
     )
 
 
@@ -298,13 +324,18 @@ class Child(Person, DemographicsMixin):
         pass
 
     carer_type = models.ForeignKey(
-        ServiceUser, on_delete=models.PROTECT, help_text="I am a: ", null=True
+        ServiceUser,
+        on_delete=models.PROTECT,
+        help_text="I am a: ",
+        blank=True,
+        null=True,
     )
     experience = models.ForeignKey(
         Rating,
         related_name="child_experience",
         on_delete=models.PROTECT,
         help_text="Overall, how was your experience of our service?",
+        blank=True,
         null=True,
     )
     listening = models.ForeignKey(
@@ -312,6 +343,7 @@ class Child(Person, DemographicsMixin):
         related_name="child_listening",
         on_delete=models.PROTECT,
         help_text="How good were our services at listening to you?",
+        blank=True,
         null=True,
     )
     explaining = models.ForeignKey(
@@ -319,6 +351,7 @@ class Child(Person, DemographicsMixin):
         related_name="child_explaining",
         on_delete=models.PROTECT,
         help_text="How good were our services at explaining information clearly?",
+        blank=True,
         null=True,
     )
     kind = models.ForeignKey(
@@ -326,6 +359,7 @@ class Child(Person, DemographicsMixin):
         related_name="child_kind",
         on_delete=models.PROTECT,
         help_text="How good were our services at being kind to you?",
+        blank=True,
         null=True,
     )
     treatment = models.ForeignKey(
@@ -333,6 +367,7 @@ class Child(Person, DemographicsMixin):
         related_name="child_treatment",
         on_delete=models.PROTECT,
         help_text="How good were our services at involving you in decisions about your care or treatment?",
+        blank=True,
         null=True,
     )
     positive = models.ForeignKey(
@@ -340,9 +375,10 @@ class Child(Person, DemographicsMixin):
         related_name="child_positive",
         on_delete=models.PROTECT,
         help_text="How good were our services at making a positive difference to your health and wellbeing?",
+        blank=True,
         null=True,
     )
-    age = models.ForeignKey(ChildAge, on_delete=models.PROTECT, null=True)
+    age = models.ForeignKey(ChildAge, on_delete=models.PROTECT, blank=True, null=True)
 
 
 class Carer(Person, DemographicsMixin):
@@ -358,6 +394,7 @@ class Carer(Person, DemographicsMixin):
         related_name="carer_experience",
         on_delete=models.PROTECT,
         help_text="Overall, how was your experience of our service?",
+        blank=True,
         null=True,
     )
     listening = models.ForeignKey(
@@ -365,6 +402,7 @@ class Carer(Person, DemographicsMixin):
         related_name="carer_listening",
         on_delete=models.PROTECT,
         help_text="How good were our services at listening to you?",
+        blank=True,
         null=True,
     )
     explaining = models.ForeignKey(
@@ -372,6 +410,7 @@ class Carer(Person, DemographicsMixin):
         related_name="carer_explaining",
         on_delete=models.PROTECT,
         help_text="How good were our services at explaining information clearly?",
+        blank=True,
         null=True,
     )
     kind = models.ForeignKey(
@@ -379,6 +418,7 @@ class Carer(Person, DemographicsMixin):
         related_name="carer_kind",
         on_delete=models.PROTECT,
         help_text="How good were our services at being kind to you?",
+        blank=True,
         null=True,
     )
     treatment = models.ForeignKey(
@@ -386,6 +426,7 @@ class Carer(Person, DemographicsMixin):
         related_name="carer_treatment",
         on_delete=models.PROTECT,
         help_text="How good were our services at involving you in decisions about the care and treatment of the person you care for?",
+        blank=True,
         null=True,
     )
     support = models.ForeignKey(
@@ -393,6 +434,7 @@ class Carer(Person, DemographicsMixin):
         related_name="carer_support",
         on_delete=models.PROTECT,
         help_text="How good were our services at giving you information about support for you as a carer?",
+        blank=True,
         null=True,
     )
     worried = models.ForeignKey(
@@ -400,6 +442,7 @@ class Carer(Person, DemographicsMixin):
         related_name="carer_worried",
         on_delete=models.PROTECT,
         help_text="Did our services tell you who you could contact if you were worried about the person you care for?",
+        blank=True,
         null=True,
     )
     assessment = models.ForeignKey(
@@ -407,6 +450,7 @@ class Carer(Person, DemographicsMixin):
         related_name="carer_assessment",
         on_delete=models.PROTECT,
         help_text="Did we tell you who to contact for a carers assessment?",
+        blank=True,
         null=True,
     )
     carer_type = models.ForeignKey(
@@ -414,6 +458,7 @@ class Carer(Person, DemographicsMixin):
         related_name="carer_type",
         on_delete=models.PROTECT,
         help_text="I am a carer, family member, friend, parent or guardian of someone:",
+        blank=True,
         null=True,
     )
 
@@ -431,6 +476,7 @@ class YoungCarer(Person, DemographicsMixin):
         related_name="young_carer_experience",
         on_delete=models.PROTECT,
         help_text="Overall, how was your experience of our service?",
+        blank=True,
         null=True,
     )
     listening = models.ForeignKey(
@@ -438,6 +484,7 @@ class YoungCarer(Person, DemographicsMixin):
         related_name="young_carer_listening",
         on_delete=models.PROTECT,
         help_text="Were our services good at listening to you?",
+        blank=True,
         null=True,
     )
     explaining = models.ForeignKey(
@@ -445,6 +492,7 @@ class YoungCarer(Person, DemographicsMixin):
         related_name="young_carer_explaining",
         on_delete=models.PROTECT,
         help_text="Were our services good at explaining things clearly?",
+        blank=True,
         null=True,
     )
     kind = models.ForeignKey(
@@ -452,6 +500,7 @@ class YoungCarer(Person, DemographicsMixin):
         related_name="young_carer_kind",
         on_delete=models.PROTECT,
         help_text="Were our services good at being kind to you?",
+        blank=True,
         null=True,
     )
     involving = models.ForeignKey(
@@ -459,6 +508,7 @@ class YoungCarer(Person, DemographicsMixin):
         related_name="young_carer_involving",
         on_delete=models.PROTECT,
         help_text="Were our services good at involving you in the way we helped the person you care for?",
+        blank=True,
         null=True,
     )
     talking = models.ForeignKey(
@@ -466,6 +516,7 @@ class YoungCarer(Person, DemographicsMixin):
         related_name="young_carer_talking",
         on_delete=models.PROTECT,
         help_text="Were our services good at talking to you about the support you could have as a carer?",
+        blank=True,
         null=True,
     )
     worried = models.ForeignKey(
@@ -473,6 +524,7 @@ class YoungCarer(Person, DemographicsMixin):
         related_name="young_carer_worried",
         on_delete=models.PROTECT,
         help_text="Did our services tell you who you could contact if you were worried about the person you care for?",
+        blank=True,
         null=True,
     )
     assessment = models.ForeignKey(
@@ -480,9 +532,10 @@ class YoungCarer(Person, DemographicsMixin):
         related_name="young_carer_assessment",
         on_delete=models.PROTECT,
         help_text="Did we tell you who to contact for a carers assessment?",
+        blank=True,
         null=True,
     )
-    age = models.ForeignKey(ChildAge, on_delete=models.PROTECT, null=True)
+    age = models.ForeignKey(ChildAge, on_delete=models.PROTECT, blank=True, null=True)
 
 
 class Accessible(Person):
@@ -497,6 +550,7 @@ class Accessible(Person):
         ServiceUser,
         on_delete=models.PROTECT,
         help_text="I am a: ",
+        blank=True,
         null=True,
     )
     experience = models.ForeignKey(
@@ -504,6 +558,7 @@ class Accessible(Person):
         related_name="accessible_experience",
         on_delete=models.PROTECT,
         help_text="Did you have a good experience from our staff?",
+        blank=True,
         null=True,
     )
     listening = models.ForeignKey(
@@ -511,6 +566,7 @@ class Accessible(Person):
         related_name="accessible_listening",
         on_delete=models.PROTECT,
         help_text="Did our staff listen to you?",
+        blank=True,
         null=True,
     )
     explaining = models.ForeignKey(
@@ -518,6 +574,7 @@ class Accessible(Person):
         related_name="accessible_explaining",
         on_delete=models.PROTECT,
         help_text="Did our staff explain things clearly?",
+        blank=True,
         null=True,
     )
     kind = models.ForeignKey(
@@ -525,6 +582,7 @@ class Accessible(Person):
         related_name="accessible_kind",
         on_delete=models.PROTECT,
         help_text="Were our staff kind to you?",
+        blank=True,
         null=True,
     )
     ask = models.ForeignKey(
@@ -532,6 +590,7 @@ class Accessible(Person):
         related_name="accessible_ask",
         on_delete=models.PROTECT,
         help_text="Did our staff ask you what you wanted?",
+        blank=True,
         null=True,
     )
     better = models.ForeignKey(
@@ -539,5 +598,6 @@ class Accessible(Person):
         related_name="accessible_better",
         on_delete=models.PROTECT,
         help_text="Did our staff help you feel better?",
+        blank=True,
         null=True,
     )
