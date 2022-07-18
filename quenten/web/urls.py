@@ -2,16 +2,16 @@ from django.urls import path
 
 from .views import (
     PersonCreateView,
+    PersonSelectView,
     PersonUpdateView,
     ResultsListView,
-    TeamSelectView,
     UncodedListView,
     UncodedUpdateNext,
     UncodedUpdateView,
 )
 
 urlpatterns = [
-    path("", TeamSelectView.as_view(), name="team-select"),
+    path("", PersonSelectView.as_view(), name="person-select"),
     path("adult/", PersonCreateView.as_view(), name="adult-new"),
     path("child/", PersonCreateView.as_view(), name="child-new"),
     path("youngcarer/", PersonCreateView.as_view(), name="young-carer-new"),
