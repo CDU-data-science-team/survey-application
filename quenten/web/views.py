@@ -1,6 +1,7 @@
 from typing import Any, Dict, Optional
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q
 from django.db.models.query import QuerySet
 from django.forms import Form
@@ -47,7 +48,7 @@ class TeamSelectView(LoginRequiredMixin, FormView):
         return super().get_success_url()
 
 
-class PersonCreateView(LoginRequiredMixin, CreateView):
+class PersonCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     """
     Form view to create adult form response.
     Further forms can follow this template.
@@ -100,8 +101,11 @@ class PersonCreateView(LoginRequiredMixin, CreateView):
             }
         return kwargs
 
+    def get_success_message(self, cleaned_data: Dict[str, str]) -> str:
+        return f"Submission successful. id: {self.object.id}"
 
-class PersonUpdateView(LoginRequiredMixin, UpdateView):
+
+class PersonUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     """
     Update view.
     """
@@ -142,6 +146,9 @@ class PersonUpdateView(LoginRequiredMixin, UpdateView):
             "directorate": team_object.directorate,
         }
         return kwargs
+
+    def get_success_message(self, cleaned_data: Dict[str, str]) -> str:
+        return f"Update successful. id: {self.object.id}"
 
 
 class ResultsListView(LoginRequiredMixin, ListView):
