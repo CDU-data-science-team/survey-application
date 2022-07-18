@@ -4,7 +4,9 @@
 
 {% block content %}
 
-{% if request.resolver_match.url_name == 'result-detail' %}
+{% with url=request.resolver_match.url_name %}
+
+{% if url == 'result-detail' %}
   <a href="{% url 'result-update' uuid=object.id %}" class="btn btn-primary mt-3 mb-5">Edit</a>
   <fieldset disabled>
 {% else %}
@@ -16,8 +18,14 @@
 
       {% crispy form %}
 
+      {% if url == 'result-detail' or url == 'uncoded-update' or url == 'uncoded-next' %}
+      {% else %}
+        <button type="submit" name="submit" value="Submit" class="btn btn-primary mt-3" id="submit-id-submit">Submit</button>
+      {% endif %}
   </form>
 </fieldset>
+
+{% endwith %}
 
 {% if object %}
   <div class="mt-2 text-secondary">Last updated: {{ object.updated_at }}</div>
