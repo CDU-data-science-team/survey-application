@@ -24,6 +24,9 @@ class QuestionOption(BaseModel):
     name = models.CharField(max_length=128)
     value = models.CharField(max_length=128)
     sort_order = models.PositiveIntegerField()
+    hidden = models.BooleanField(
+        default=False, help_text="Select if the field needs to be hidden on the form"
+    )
 
     class Meta:
         abstract = True
@@ -101,9 +104,19 @@ class DemographicsMixin(models.Model):
     class Meta:
         abstract = True
 
-    gender = models.ForeignKey(Gender, on_delete=models.PROTECT, blank=True, null=True)
+    gender = models.ForeignKey(
+        Gender,
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        limit_choices_to={"hidden": False},
+    )
     ethnic_group = models.ForeignKey(
-        EthnicGroup, on_delete=models.PROTECT, blank=True, null=True
+        EthnicGroup,
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        limit_choices_to={"hidden": False},
     )
     disability = models.ForeignKey(
         Disability,
@@ -111,20 +124,36 @@ class DemographicsMixin(models.Model):
         help_text="Do you have a long term disability or a long-term health condition which affects your day to day activities?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     religion = models.ForeignKey(
-        Religion, on_delete=models.PROTECT, blank=True, null=True
+        Religion,
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        limit_choices_to={"hidden": False},
     )
     sexual_orientation = models.ForeignKey(
-        SexualOrientation, on_delete=models.PROTECT, blank=True, null=True
+        SexualOrientation,
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        limit_choices_to={"hidden": False},
     )
-    age = models.ForeignKey(Age, on_delete=models.PROTECT, blank=True, null=True)
+    age = models.ForeignKey(
+        Age,
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        limit_choices_to={"hidden": False},
+    )
     relationship = models.ForeignKey(
         Relationship,
         on_delete=models.PROTECT,
         help_text="What is your relationship status?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
 
 
@@ -143,6 +172,7 @@ class PregnancyMixin(models.Model):
         help_text="Are you pregnant at this time?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     baby = models.ForeignKey(
         Pregnant,
@@ -151,6 +181,7 @@ class PregnancyMixin(models.Model):
         help_text="Have you had a baby within the last 26 weeks?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
 
 
@@ -264,6 +295,7 @@ class Adult(Person, DemographicsMixin, PregnancyMixin):
         help_text="I am a: ",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     experience = models.ForeignKey(
         Rating,
@@ -272,6 +304,7 @@ class Adult(Person, DemographicsMixin, PregnancyMixin):
         help_text="Overall, how was your experience of our service?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     listening = models.ForeignKey(
         Rating,
@@ -280,6 +313,7 @@ class Adult(Person, DemographicsMixin, PregnancyMixin):
         help_text="How good were our services at listening to you?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     explaining = models.ForeignKey(
         Rating,
@@ -288,6 +322,7 @@ class Adult(Person, DemographicsMixin, PregnancyMixin):
         help_text="How good were our services at explaining information clearly?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     kind = models.ForeignKey(
         Rating,
@@ -296,6 +331,7 @@ class Adult(Person, DemographicsMixin, PregnancyMixin):
         help_text="How good were our services at being kind to you?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     treatment = models.ForeignKey(
         Rating,
@@ -304,6 +340,7 @@ class Adult(Person, DemographicsMixin, PregnancyMixin):
         help_text="How good were our services at involving you in decisions about your care or treatment?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     positive = models.ForeignKey(
         Rating,
@@ -312,6 +349,7 @@ class Adult(Person, DemographicsMixin, PregnancyMixin):
         help_text="How good were our services at making a positive difference to your health and wellbeing?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
 
 
@@ -329,6 +367,7 @@ class Child(Person, DemographicsMixin):
         help_text="I am a: ",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     experience = models.ForeignKey(
         Rating,
@@ -337,6 +376,7 @@ class Child(Person, DemographicsMixin):
         help_text="Overall, how was your experience of our service?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     listening = models.ForeignKey(
         ChildRating,
@@ -345,6 +385,7 @@ class Child(Person, DemographicsMixin):
         help_text="How good were our services at listening to you?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     explaining = models.ForeignKey(
         ChildRating,
@@ -353,6 +394,7 @@ class Child(Person, DemographicsMixin):
         help_text="How good were our services at explaining information clearly?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     kind = models.ForeignKey(
         ChildRating,
@@ -361,6 +403,7 @@ class Child(Person, DemographicsMixin):
         help_text="How good were our services at being kind to you?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     treatment = models.ForeignKey(
         ChildRating,
@@ -369,6 +412,7 @@ class Child(Person, DemographicsMixin):
         help_text="How good were our services at involving you in decisions about your care or treatment?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     positive = models.ForeignKey(
         ChildRating,
@@ -377,8 +421,15 @@ class Child(Person, DemographicsMixin):
         help_text="How good were our services at making a positive difference to your health and wellbeing?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
-    age = models.ForeignKey(ChildAge, on_delete=models.PROTECT, blank=True, null=True)
+    age = models.ForeignKey(
+        ChildAge,
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        limit_choices_to={"hidden": False},
+    )
 
 
 class Carer(Person, DemographicsMixin):
@@ -396,6 +447,7 @@ class Carer(Person, DemographicsMixin):
         help_text="Overall, how was your experience of our service?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     listening = models.ForeignKey(
         Rating,
@@ -404,6 +456,7 @@ class Carer(Person, DemographicsMixin):
         help_text="How good were our services at listening to you?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     explaining = models.ForeignKey(
         Rating,
@@ -412,6 +465,7 @@ class Carer(Person, DemographicsMixin):
         help_text="How good were our services at explaining information clearly?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     kind = models.ForeignKey(
         Rating,
@@ -420,6 +474,7 @@ class Carer(Person, DemographicsMixin):
         help_text="How good were our services at being kind to you?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     treatment = models.ForeignKey(
         Rating,
@@ -428,6 +483,7 @@ class Carer(Person, DemographicsMixin):
         help_text="How good were our services at involving you in decisions about the care and treatment of the person you care for?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     support = models.ForeignKey(
         Rating,
@@ -444,6 +500,7 @@ class Carer(Person, DemographicsMixin):
         help_text="Did our services tell you who you could contact if you were worried about the person you care for?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     assessment = models.ForeignKey(
         ContactGeneric,
@@ -452,6 +509,7 @@ class Carer(Person, DemographicsMixin):
         help_text="Did we tell you who to contact for a carers assessment?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     carer_type = models.ForeignKey(
         CarerType,
@@ -460,6 +518,7 @@ class Carer(Person, DemographicsMixin):
         help_text="I am a carer, family member, friend, parent or guardian of someone:",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
 
 
@@ -478,6 +537,7 @@ class YoungCarer(Person, DemographicsMixin):
         help_text="Overall, how was your experience of our service?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     listening = models.ForeignKey(
         ChildRating,
@@ -486,6 +546,7 @@ class YoungCarer(Person, DemographicsMixin):
         help_text="Were our services good at listening to you?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     explaining = models.ForeignKey(
         ChildRating,
@@ -494,6 +555,7 @@ class YoungCarer(Person, DemographicsMixin):
         help_text="Were our services good at explaining things clearly?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     kind = models.ForeignKey(
         ChildRating,
@@ -502,6 +564,7 @@ class YoungCarer(Person, DemographicsMixin):
         help_text="Were our services good at being kind to you?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     involving = models.ForeignKey(
         ChildRating,
@@ -510,6 +573,7 @@ class YoungCarer(Person, DemographicsMixin):
         help_text="Were our services good at involving you in the way we helped the person you care for?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     talking = models.ForeignKey(
         ChildRating,
@@ -518,6 +582,7 @@ class YoungCarer(Person, DemographicsMixin):
         help_text="Were our services good at talking to you about the support you could have as a carer?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     worried = models.ForeignKey(
         ChildRating,
@@ -526,6 +591,7 @@ class YoungCarer(Person, DemographicsMixin):
         help_text="Did our services tell you who you could contact if you were worried about the person you care for?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     assessment = models.ForeignKey(
         ChildRating,
@@ -534,8 +600,15 @@ class YoungCarer(Person, DemographicsMixin):
         help_text="Did we tell you who to contact for a carers assessment?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
-    age = models.ForeignKey(ChildAge, on_delete=models.PROTECT, blank=True, null=True)
+    age = models.ForeignKey(
+        ChildAge,
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        limit_choices_to={"hidden": False},
+    )
 
 
 class Accessible(Person):
@@ -552,6 +625,7 @@ class Accessible(Person):
         help_text="I am a: ",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     experience = models.ForeignKey(
         ChildRating,
@@ -560,6 +634,7 @@ class Accessible(Person):
         help_text="Did you have a good experience from our staff?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     listening = models.ForeignKey(
         ChildRating,
@@ -568,6 +643,7 @@ class Accessible(Person):
         help_text="Did our staff listen to you?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     explaining = models.ForeignKey(
         ChildRating,
@@ -576,6 +652,7 @@ class Accessible(Person):
         help_text="Did our staff explain things clearly?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     kind = models.ForeignKey(
         ChildRating,
@@ -584,6 +661,7 @@ class Accessible(Person):
         help_text="Were our staff kind to you?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     ask = models.ForeignKey(
         ChildRating,
@@ -592,6 +670,7 @@ class Accessible(Person):
         help_text="Did our staff ask you what you wanted?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
     better = models.ForeignKey(
         ChildRating,
@@ -600,4 +679,5 @@ class Accessible(Person):
         help_text="Did our staff help you feel better?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False},
     )
