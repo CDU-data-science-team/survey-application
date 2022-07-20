@@ -1,6 +1,7 @@
 import uuid
 
 from django.db import models
+from django.urls import reverse
 from model_utils.managers import InheritanceManager
 from users.models import CustomUser
 
@@ -235,6 +236,9 @@ class Person(BaseModel):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    # Paper index format is YYYYQID created on save - To be confirmed with client
+    paper_index = models.IntegerField(editable=False, null=True, unique=False)
+
     comments_good = models.TextField(null=True, blank=True, help_text="What was good?")
     best_code_1 = models.ForeignKey(
         CommentsCode,
@@ -279,6 +283,29 @@ class Person(BaseModel):
 
     def __str__(self) -> str:
         return f"{self.created_at}, {self.team.name}"
+
+    def get_absolute_url(self):
+        return reverse("result-detail", self.paper_index)
+
+    def save(self, *args, **kwargs) -> None:
+        """
+        Override to set the paper_index from created_at and increment it.
+        """
+        super().save(*args, **kwargs)
+
+        if not self.paper_index:
+            quarter = (self.created_at.month + 2) // 3
+            increment = (
+                Person._base_manager.filter(
+                    created_at__year=self.created_at.year,
+                    created_at__quarter=quarter,
+                    created_at__lt=self.created_at,
+                ).count()
+                + 1
+            )
+            self.paper_index = int(f"{self.created_at.year}{quarter}{increment}")
+
+        return super().save(*args, **kwargs)
 
 
 class Adult(Person, DemographicsMixin, PregnancyMixin):
