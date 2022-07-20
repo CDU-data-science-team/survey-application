@@ -130,6 +130,7 @@ class ResultsListView(LoginRequiredMixin, ListView):
 
     template_name: str = "list.html"
     model: Person
+    paginate_by = 20
 
     def get_queryset(self) -> QuerySet:
         """
@@ -151,6 +152,7 @@ class UncodedListView(LoginRequiredMixin, ListView):
 
     template_name: str = "uncoded_list.html"
     model: Person
+    paginate_by = 20
 
     def get_queryset(self) -> QuerySet:
         """
