@@ -168,7 +168,11 @@ class UncodedListView(LoginRequiredMixin, ListView):
                 | Q(improve_code_2__isnull=True)
             )
         )
-        return q.prefetch_related("team", "added_by").order_by("-created_at")
+        return (
+            q.select_subclasses()
+            .prefetch_related("team", "added_by")
+            .order_by("-created_at")
+        )
 
 
 class UncodedUpdateView(LoginRequiredMixin, UpdateView):

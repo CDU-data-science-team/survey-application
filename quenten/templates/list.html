@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load web_extras %}
 
 {% block title %}Results list{% endblock %}
 
@@ -10,25 +11,30 @@
     <thead>
       <tr>
         <th scope="col">Paper Index</th>
-        <th scope="col">Date</th>
+        <th scope="col">Created</th>
+        <th scope="col">Form Type</th>
         <th scope="col">Team Name</th>
         <th scope="col">Added by</th>
       </tr>
     </thead>
     <tbody>
         {% for item in object_list %}
+            {% get_person_type item as person_type %}
             <tr>
                 <td>
                    <a href="{% url 'result-detail' item.paper_index %}">{{ item.paper_index }}</a>
                 </td>
                 <td>
                     {{ item.created_at }}
+                 </td>
+                 <td>
+                     {{ person_type|title }}
+                 </td>
+                <td>
+                    {{ item.team.name|title }}
                 </td>
                 <td>
-                    {{ item.team.name }}
-                </td>
-                <td>
-                    {{ item.added_by }}
+                    {{ item.added_by|title }}
                 </td>
             </tr>
         {% empty %}
