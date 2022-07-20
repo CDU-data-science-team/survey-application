@@ -9,6 +9,7 @@
 <table class="table table-striped">
     <thead>
       <tr>
+        <th scope="col">Paper Index</th>
         <th scope="col">Date</th>
         <th scope="col">Team Name</th>
         <th scope="col">Added by</th>
@@ -18,7 +19,10 @@
         {% for item in object_list %}
             <tr>
                 <td>
-                   <a href="{% url 'result-detail' uuid=item.id %}">{{ item.created_at }}</a>
+                   <a href="{% url 'result-detail' item.paper_index %}">{{ item.paper_index }}</a>
+                </td>
+                <td>
+                    {{ item.created_at }}
                 </td>
                 <td>
                     {{ item.team.name }}
