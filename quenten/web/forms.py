@@ -61,6 +61,7 @@ class AdultForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = "post"
+        self.helper.form_tag = False
         self.helper.layout = Layout(
             Div(
                 Field(
@@ -135,7 +136,6 @@ class AdultForm(forms.ModelForm):
                 Field("baby", wrapper_class="col-md-4", css_class="form-control"),
                 css_class="row",
             ),
-            Submit("submit", "Submit", css_class="mt-3"),
         )
 
 
@@ -166,6 +166,7 @@ class ChildForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = "post"
+        self.helper.form_tag = False
         self.helper.layout = Layout(
             Div(
                 Field(
@@ -227,7 +228,6 @@ class ChildForm(forms.ModelForm):
                 Field("age", wrapper_class="col-md-4", css_class="form-control"),
                 css_class="row",
             ),
-            Submit("submit", "Submit", css_class="mt-3"),
         )
 
 
@@ -259,6 +259,7 @@ class YoungCarerForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = "post"
+        self.helper.form_tag = False
         self.helper.layout = Layout(
             Div(
                 Field(
@@ -321,7 +322,6 @@ class YoungCarerForm(forms.ModelForm):
                 Field("age", wrapper_class="col-md-4", css_class="form-control"),
                 css_class="row",
             ),
-            Submit("submit", "Submit", css_class="mt-3"),
         )
 
 
@@ -356,6 +356,7 @@ class CarerForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = "post"
+        self.helper.form_tag = False
         self.helper.layout = Layout(
             Div(
                 Field(
@@ -430,7 +431,6 @@ class CarerForm(forms.ModelForm):
                 Field("carer_type", wrapper_class="col-md-4", css_class="form-control"),
                 css_class="row",
             ),
-            Submit("submit", "Submit", css_class="mt-3"),
         )
 
 
@@ -455,6 +455,7 @@ class AccessibleForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = "post"
+        self.helper.form_tag = False
         self.helper.layout = Layout(
             Div(
                 Field(
@@ -500,7 +501,6 @@ class AccessibleForm(forms.ModelForm):
                 ),
                 css_class="row",
             ),
-            Submit("submit", "Submit", css_class="mt-3"),
         )
 
 
