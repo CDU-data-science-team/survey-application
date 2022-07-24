@@ -30,6 +30,60 @@ class PersonSelectForm(forms.Form):
         )
 
 
+class PersonFilterForm(forms.Form):
+    """
+    Form for filtering on the ListViews
+    """
+
+    class Meta:
+        fields = (
+            "paper_index",
+            "team__name",
+            "added_by",
+            # 'form_type',
+        )
+
+    # _PERSONS = [
+    #     ("adult", "Adult"),
+    #     ("child", "Child / Young Person"),
+    #     ("carer", "Carer"),
+    #     ("youngcarer", "Young Carer"),
+    #     ("accessible", "Accessible"),
+    # ]
+    # form_type = forms.ChoiceField(choices=_PERSONS, required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_method = "get"
+        self.helper.layout = Layout(
+            Div(
+                Field(
+                    "paper_index",
+                    wrapper_class="col-md-2",
+                    css_class="form-control",
+                ),
+                Field(
+                    "team__name",
+                    wrapper_class="col-md-2",
+                    css_class="form-control",
+                ),
+                Field(
+                    "added_by",
+                    wrapper_class="col-md-2",
+                    css_class="form-control",
+                ),
+                Field(
+                    "form_type",
+                    wrapper_class="col-md-2",
+                    css_class="form-control",
+                ),
+                css_class="row",
+            ),
+            Submit("submit", "Submit", css_class="mt-3 mb-3"),
+        )
+
+
 class AdultForm(forms.ModelForm):
     class Meta:
         model = Adult

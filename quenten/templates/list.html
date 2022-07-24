@@ -7,6 +7,13 @@
 
 <h1>All Results</h1>
 
+<form method="get" class="form-inline mt-4 mb-4">
+
+    {% load crispy_forms_tags %}
+
+    {% crispy filter.form %}
+</form>
+
 <table class="table table-striped">
     <thead>
       <tr>

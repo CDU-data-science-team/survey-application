@@ -10,6 +10,7 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, FormView, ListView, UpdateView
 
+from .filters import ResultFilter
 from .forms import (
     AccessibleForm,
     AdultForm,
@@ -136,13 +137,21 @@ class ResultsListView(LoginRequiredMixin, ListView):
         """
         Override.
         """
-        return (
-            Person.objects.select_subclasses(
-                Adult, Child, YoungCarer, Carer, Accessible
-            )
+        queryset = Person.objects.all()
+        filterset = ResultFilter(self.request.GET, queryset)
+        queryset = (
+            filterset.qs.select_subclasses()
             .prefetch_related("team", "added_by")
             .order_by("-created_at")
         )
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        queryset = self.get_queryset()
+        filterset = ResultFilter(self.request.GET, queryset)
+        context["filter"] = filterset
+        return context
 
 
 class UncodedListView(LoginRequiredMixin, ListView):
@@ -157,6 +166,7 @@ class UncodedListView(LoginRequiredMixin, ListView):
     def get_queryset(self) -> QuerySet:
         """
         Override - filter on if response has comments and is uncoded.
+        TODO: Can replace this with the property.
         """
         q = Person.objects
         q = q.filter(~Q(comments_good="") | ~Q(comments_better=""))
