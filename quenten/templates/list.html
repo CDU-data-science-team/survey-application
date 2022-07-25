@@ -17,18 +17,19 @@
 <table class="table table-striped">
     <thead>
       <tr>
-        <th scope="col">Paper Index</th>
+        <th scope="col" class="text-center">Paper Index</th>
         <th scope="col">Created</th>
         <th scope="col">Form Type</th>
         <th scope="col">Team Name</th>
         <th scope="col">Added by</th>
+        <th scope="col" class="text-center">Coded</th>
       </tr>
     </thead>
     <tbody>
         {% for item in object_list %}
             {% get_person_type item as person_type %}
             <tr>
-                <td>
+                <td class="text-center">
                    <a href="{% url 'result-detail' item.paper_index %}">{{ item.paper_index }}</a>
                 </td>
                 <td>
@@ -42,6 +43,13 @@
                 </td>
                 <td>
                     {{ item.added_by|title }}
+                </td>
+                <td class="text-center">
+                    {% if item.is_coded %}
+                        <i class="bi bi-check2 text-success"></i>
+                    {% else %}
+                        <i class="bi bi-x text-danger"></i>
+                    {% endif %}
                 </td>
             </tr>
         {% empty %}

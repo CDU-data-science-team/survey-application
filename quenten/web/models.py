@@ -285,26 +285,17 @@ class Person(BaseModel):
     def is_coded(self) -> bool:
         """
         Returns false if the response needs to be coded
-
-        q = q.filter(~Q(comments_good="") | ~Q(comments_better=""))
-        q = q.filter(
-            (
-                Q(best_code_1__isnull=True)
-                | Q(best_code_2__isnull=True)
-                | Q(improve_code_1__isnull=True)
-                | Q(improve_code_2__isnull=True)
+        """
+        return bool(
+            not self.comments_good
+            and not self.comments_better
+            or (
+                self.best_code_1
+                or self.best_code_2
+                or self.improve_code_1
+                or self.improve_code_2
             )
         )
-        """
-        if self.comments_good | self.comments_better:
-            if (
-                self.best_code_1
-                | self.best_code_2
-                | self.improve_code_1
-                | self.improve_code_2
-            ):
-                return False
-        return True
 
     def __str__(self) -> str:
         return f"{self.paper_index}"
