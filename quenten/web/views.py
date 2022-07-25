@@ -1,7 +1,7 @@
 import re
 from typing import Any, Dict
 
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q
 from django.db.models.query import QuerySet
@@ -58,7 +58,9 @@ class PersonSelectView(LoginRequiredMixin, FormView):
         return super().get_success_url()
 
 
-class PersonCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+class PersonCreateView(
+    LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin, CreateView
+):
     """
     Form view to create adult form response.
     Further forms can follow this template.
@@ -68,6 +70,7 @@ class PersonCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     form_class = None
     template_name = "forms/person_form.html"
     success_url = "/"
+    permission_required = "web.add_response"
 
     def setup(self, request: HttpRequest, *args: Any, **kwargs: Any) -> None:
         """
@@ -101,7 +104,9 @@ class PersonCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return f"Submission successful. Paper index is: {self.object.paper_index}"
 
 
-class PersonUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class PersonUpdateView(
+    LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin, UpdateView
+):
     """
     Update view.
     """
@@ -110,6 +115,7 @@ class PersonUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     form_class = None
     template_name: str = "forms/person_form.html"
     success_url = "/results/"
+    permission_required = "web.update_response"
 
     def get_object(self) -> Person:
         return Person.objects.get_subclass(paper_index=self.kwargs.get("paper_index"))
@@ -177,7 +183,7 @@ class ResultsListView(LoginRequiredMixin, ListView):
         return context
 
 
-class UncodedListView(LoginRequiredMixin, ListView):
+class UncodedListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     """
     List view for uncoded results.
     """
@@ -185,6 +191,7 @@ class UncodedListView(LoginRequiredMixin, ListView):
     template_name: str = "uncoded_list.html"
     model: Person
     paginate_by = 20
+    permission_required = "web.code_response"
 
     def get_queryset(self) -> QuerySet:
         """
@@ -207,7 +214,7 @@ class UncodedListView(LoginRequiredMixin, ListView):
         )
 
 
-class UncodedUpdateView(LoginRequiredMixin, UpdateView):
+class UncodedUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     """
     Update view for a specific uncoded result.
     """
@@ -215,6 +222,7 @@ class UncodedUpdateView(LoginRequiredMixin, UpdateView):
     model = Person
     form_class = CodeForm
     template_name: str = "forms/person_form.html"
+    permission_required = "web.code_response"
 
     def get_object(self) -> Person:
         return Person.objects.get(paper_index=self.kwargs.get("paper_index"))

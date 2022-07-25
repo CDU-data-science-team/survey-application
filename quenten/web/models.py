@@ -228,6 +228,11 @@ class Person(BaseModel):
 
     class Meta:
         ordering = ["updated_at"]
+        permissions = [
+            ("add_response", "Can add new form responses"),
+            ("update_response", "Can update form responses"),
+            ("code_response", "Can code forms based on comments"),
+        ]
 
     objects = InheritanceManager()
 
@@ -235,8 +240,6 @@ class Person(BaseModel):
     added_by = models.ForeignKey(CustomUser, on_delete=models.PROTECT, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    # Paper index format is YYYYQID created on save - To be confirmed with client
     paper_index = models.IntegerField(editable=False, null=True, unique=True)
 
     comments_good = models.TextField(null=True, blank=True, help_text="What was good?")
