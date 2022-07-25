@@ -284,18 +284,20 @@ class Person(BaseModel):
     @property
     def is_coded(self) -> bool:
         """
-        Returns false if the response needs to be coded
+        Returns false if the response needs to be coded.
+        A response needs coding if it has comments in comments_good or comments_better
+        And the codes best_code_1/2 improve_code_1/2 are blank
         """
-        return bool(
-            not self.comments_good
-            and not self.comments_better
-            or (
-                self.best_code_1
-                or self.best_code_2
-                or self.improve_code_1
-                or self.improve_code_2
-            )
-        )
+        if not self.comments_better and not self.comments_good:
+            return True
+        if (
+            not self.best_code_1
+            or not self.best_code_2
+            or not self.improve_code_1
+            or not self.improve_code_2
+        ):
+            return False
+        return True
 
     def __str__(self) -> str:
         return f"{self.paper_index}"
