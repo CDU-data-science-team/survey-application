@@ -42,7 +42,17 @@ class PersonSelectView(LoginRequiredMixin, FormView):
         """
         Override to redirect to the users chosen form.
         """
-        user_choice = self.form.cleaned_data["choice"]
+        form_choice = self.form.data["form-choice"]
+        if form_choice == "Adult Form":
+            user_choice = "adult"
+        elif form_choice == "Young Person Form":
+            user_choice = "child"
+        elif form_choice == "Carer Form":
+            user_choice = "carer"
+        elif form_choice == "Young Carer Form":
+            user_choice == "youngcarer"
+        elif form_choice == "Accessible Form":
+            user_choice = "accessible"
         self.success_url = f"/{user_choice}"
         return super().get_success_url()
 
