@@ -213,7 +213,6 @@ class UncodedListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     def get_queryset(self) -> QuerySet:
         """
         Override - filter on if response has comments and is uncoded.
-        TODO: Can replace this with the property.
         """
         q = Person.objects
         q = q.filter(~Q(comments_good="") | ~Q(comments_better=""))
