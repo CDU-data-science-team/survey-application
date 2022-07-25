@@ -1,3 +1,4 @@
+import re
 from typing import Any, Dict
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -50,7 +51,7 @@ class PersonSelectView(LoginRequiredMixin, FormView):
         elif form_choice == "Carer Form":
             user_choice = "carer"
         elif form_choice == "Young Carer Form":
-            user_choice == "youngcarer"
+            user_choice = "youngcarer"
         elif form_choice == "Accessible Form":
             user_choice = "accessible"
         self.success_url = f"/{user_choice}"
@@ -145,7 +146,7 @@ class ResultsListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self) -> QuerySet:
         """
-        Override.
+        Override to select subclasses within the query.
         """
         queryset = Person.objects.all()
         filterset = ResultFilter(self.request.GET, queryset)
@@ -156,10 +157,22 @@ class ResultsListView(LoginRequiredMixin, ListView):
         )
         return queryset
 
+    def get_query_string(self):
+        """
+        Validates the query string if passed through from filter for pagination
+        """
+        query_string = self.request.META.get("QUERY_STRING", "")
+        # Get all queries excluding pages from the request's meta
+        validated_query_string = "&".join(
+            [x for x in re.findall(r"(\w*=\w{1,})", query_string) if "page=" not in x]
+        )
+        return f"&{validated_query_string.lower()}" if validated_query_string else ""
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         queryset = self.get_queryset()
         filterset = ResultFilter(self.request.GET, queryset)
+        context["query_string"] = self.get_query_string()
         context["filter"] = filterset
         return context
 

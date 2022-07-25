@@ -15,7 +15,7 @@ def get_person_type(person: Person):
     elif isinstance(person, Child):
         person_type = "child"
     elif isinstance(person, YoungCarer):
-        person_type = "youngcarer"
+        person_type = "young carer"
     elif isinstance(person, Accessible):
         person_type = "accessible"
 
