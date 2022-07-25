@@ -30,11 +30,15 @@
             {% get_person_type item as person_type %}
             <tr>
                 <td class="text-center">
+<<<<<<< HEAD
                     {% if perms.web.update_response %}
                         <a href="{% url 'result-detail' item.paper_index %}">{{ item.paper_index }}</a>
                     {% else %}
                         {{ item.paper_index }}
                     {% endif %}
+=======
+                   <a href="{% url 'result-detail' item.paper_index %}">{{ item.paper_index }}</a>
+>>>>>>> 8f81ca7 (Add is_coded property to forms model)
                 </td>
                 <td>
                     {{ item.created_at }}
