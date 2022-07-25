@@ -76,23 +76,6 @@ class PersonFilterForm(forms.Form):
     Form for filtering on the ListViews
     """
 
-    class Meta:
-        fields = (
-            "paper_index",
-            "team__name",
-            "added_by",
-            # 'form_type',
-        )
-
-    # _PERSONS = [
-    #     ("adult", "Adult"),
-    #     ("child", "Child / Young Person"),
-    #     ("carer", "Carer"),
-    #     ("youngcarer", "Young Carer"),
-    #     ("accessible", "Accessible"),
-    # ]
-    # form_type = forms.ChoiceField(choices=_PERSONS, required=False)
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -121,7 +104,7 @@ class PersonFilterForm(forms.Form):
                 ),
                 css_class="row",
             ),
-            Submit("submit", "Submit", css_class="mt-3 mb-3"),
+            Submit("submit", "Filter", css_class="mt-3 mb-3"),
         )
 
 
