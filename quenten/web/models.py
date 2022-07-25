@@ -242,9 +242,6 @@ class Person(BaseModel):
     updated_at = models.DateTimeField(auto_now=True)
     paper_index = models.IntegerField(editable=False, null=True, unique=True)
 
-    # Paper index format is YYYYQID created on save - To be confirmed with client
-    paper_index = models.IntegerField(editable=False, null=True, unique=True)
-
     comments_good = models.TextField(null=True, blank=True, help_text="What was good?")
     best_code_1 = models.ForeignKey(
         CommentsCode,
