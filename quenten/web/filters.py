@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-=======
-from ast import arg
-from unicodedata import name
-
->>>>>>> b3a873a (Add filtering to listview)
 import django_filters
 from web import forms, models
 
@@ -33,16 +27,9 @@ class ResultFilter(django_filters.FilterSet):
 
     def form_type_filter(self, queryset, value, *args, **kwargs):
         """
-<<<<<<< HEAD
         Filter based on the form_type options
         """
         form_arg = args[0]
-=======
-        Can this look up within the class _PERSONS match to it to filter?
-        """
-        form_arg = args[0]
-        print(f"👺 {args}")
->>>>>>> b3a873a (Add filtering to listview)
         try:
             if form_arg == "adult":
                 queryset = queryset.filter(adult__isnull=False)
