@@ -1,6 +1,6 @@
 # forms.py
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Div, Field, Layout, Submit
+from crispy_forms.layout import HTML, Div, Field, Layout, Submit
 from django import forms
 
 from .models import Accessible, Adult, Carer, Child, Person, YoungCarer
@@ -71,40 +71,53 @@ class PersonFilterForm(forms.Form):
         )
 
 
-class PersonFilterForm(forms.Form):
+class CodingLayout(Layout):
     """
-    Form for filtering on the ListViews
+    Form layout for the comments coding of responses.
+    Added to forms if the user has permissions.
     """
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_method = "get"
-        self.helper.layout = Layout(
+        super().__init__(
+            HTML('<hr class="mt-4">'),
+            HTML('<h6 class="mt-4">Comments Coding</h6>'),
             Div(
                 Field(
-                    "paper_index",
-                    wrapper_class="col-md-2",
+                    "best_code_1",
+                    wrapper_class="col-md-4",
+                    rows="2",
                     css_class="form-control",
                 ),
                 Field(
-                    "team__name",
-                    wrapper_class="col-md-2",
+                    "best_code_2",
+                    wrapper_class="col-md-4",
                     css_class="form-control",
                 ),
                 Field(
-                    "added_by",
-                    wrapper_class="col-md-2",
+                    "positivity",
+                    wrapper_class="col-md-4",
                     css_class="form-control",
                 ),
-                Field(
-                    "form_type",
-                    wrapper_class="col-md-2",
-                    css_class="form-control",
-                ),
-                css_class="row",
+                css_class="row mb-3",
             ),
-            Submit("submit", "Filter", css_class="mt-3 mb-3"),
+            Div(
+                Field(
+                    "improve_code_1",
+                    wrapper_class="col-md-4",
+                    css_class="form-control",
+                ),
+                Field(
+                    "improve_code_2",
+                    wrapper_class="col-md-4",
+                    css_class="form-control",
+                ),
+                Field(
+                    "criticality",
+                    wrapper_class="col-md-4",
+                    css_class="form-control",
+                ),
+                css_class="row mb-3",
+            ),
         )
 
 
@@ -121,7 +134,13 @@ class AdultForm(forms.ModelForm):
             "treatment",
             "positive",
             "comments_good",
+            "best_code_1",
+            "best_code_2",
+            "positivity",
             "comments_better",
+            "improve_code_1",
+            "improve_code_2",
+            "criticality",
             "comments_public",
             "gender",
             "ethnic_group",
@@ -135,8 +154,14 @@ class AdultForm(forms.ModelForm):
         )
 
     def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+
+        has_code_permissions = False
+        if self.request.user.has_perm("web.code_response"):
+            has_code_permissions = True
 
         super().__init__(*args, **kwargs)
+
         self.helper = FormHelper()
         self.helper.form_method = "post"
         self.helper.form_tag = False
@@ -159,15 +184,39 @@ class AdultForm(forms.ModelForm):
                 css_class="row",
             ),
             Div(
-                Field("experience", wrapper_class="col-md-4", css_class="form-control"),
-                Field("listening", wrapper_class="col-md-4", css_class="form-control"),
-                Field("explaining", wrapper_class="col-md-4", css_class="form-control"),
+                Field(
+                    "experience",
+                    wrapper_class="col-md-4",
+                    css_class="form-control",
+                ),
+                Field(
+                    "listening",
+                    wrapper_class="col-md-4",
+                    css_class="form-control",
+                ),
+                Field(
+                    "explaining",
+                    wrapper_class="col-md-4",
+                    css_class="form-control",
+                ),
                 css_class="row",
             ),
             Div(
-                Field("kind", wrapper_class="col-md-4", css_class="form-control"),
-                Field("treatment", wrapper_class="col-md-4", css_class="form-control"),
-                Field("positive", wrapper_class="col-md-4", css_class="form-control"),
+                Field(
+                    "kind",
+                    wrapper_class="col-md-4",
+                    css_class="form-control",
+                ),
+                Field(
+                    "treatment",
+                    wrapper_class="col-md-4",
+                    css_class="form-control",
+                ),
+                Field(
+                    "positive",
+                    wrapper_class="col-md-4",
+                    css_class="form-control",
+                ),
                 css_class="row",
             ),
             Div(
@@ -215,6 +264,8 @@ class AdultForm(forms.ModelForm):
                 css_class="row",
             ),
         )
+        if has_code_permissions:
+            self.helper.layout.append(CodingLayout())
 
 
 class ChildForm(forms.ModelForm):
@@ -230,7 +281,13 @@ class ChildForm(forms.ModelForm):
             "treatment",
             "positive",
             "comments_good",
+            "best_code_1",
+            "best_code_2",
+            "positivity",
             "comments_better",
+            "improve_code_1",
+            "improve_code_2",
+            "criticality",
             "comments_public",
             "gender",
             "ethnic_group",
@@ -240,6 +297,11 @@ class ChildForm(forms.ModelForm):
         )
 
     def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+
+        has_code_permissions = False
+        if self.request.user.has_perm("web.code_response"):
+            has_code_permissions = True
 
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -307,6 +369,8 @@ class ChildForm(forms.ModelForm):
                 css_class="row",
             ),
         )
+        if has_code_permissions:
+            self.helper.layout.append(CodingLayout())
 
 
 class YoungCarerForm(forms.ModelForm):
@@ -323,7 +387,13 @@ class YoungCarerForm(forms.ModelForm):
             "worried",
             "assessment",
             "comments_good",
+            "best_code_1",
+            "best_code_2",
+            "positivity",
             "comments_better",
+            "improve_code_1",
+            "improve_code_2",
+            "criticality",
             "comments_public",
             "gender",
             "ethnic_group",
@@ -333,6 +403,11 @@ class YoungCarerForm(forms.ModelForm):
         )
 
     def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+
+        has_code_permissions = False
+        if self.request.user.has_perm("web.code_response"):
+            has_code_permissions = True
 
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -401,6 +476,8 @@ class YoungCarerForm(forms.ModelForm):
                 css_class="row",
             ),
         )
+        if has_code_permissions:
+            self.helper.layout.append(CodingLayout())
 
 
 class CarerForm(forms.ModelForm):
@@ -417,7 +494,13 @@ class CarerForm(forms.ModelForm):
             "worried",
             "assessment",
             "comments_good",
+            "best_code_1",
+            "best_code_2",
+            "positivity",
             "comments_better",
+            "improve_code_1",
+            "improve_code_2",
+            "criticality",
             "comments_public",
             "gender",
             "ethnic_group",
@@ -430,6 +513,11 @@ class CarerForm(forms.ModelForm):
         )
 
     def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+
+        has_code_permissions = False
+        if self.request.user.has_perm("web.code_response"):
+            has_code_permissions = True
 
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -510,6 +598,8 @@ class CarerForm(forms.ModelForm):
                 css_class="row",
             ),
         )
+        if has_code_permissions:
+            self.helper.layout.append(CodingLayout())
 
 
 class AccessibleForm(forms.ModelForm):
@@ -525,10 +615,21 @@ class AccessibleForm(forms.ModelForm):
             "ask",
             "better",
             "comments_good",
+            "best_code_1",
+            "best_code_2",
+            "positivity",
             "comments_better",
+            "improve_code_1",
+            "improve_code_2",
+            "criticality",
         )
 
     def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+
+        has_code_permissions = False
+        if self.request.user.has_perm("web.code_response"):
+            has_code_permissions = True
 
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -580,6 +681,8 @@ class AccessibleForm(forms.ModelForm):
                 css_class="row",
             ),
         )
+        if has_code_permissions:
+            self.helper.layout.append(CodingLayout())
 
 
 class CodeForm(forms.ModelForm):
@@ -598,7 +701,6 @@ class CodeForm(forms.ModelForm):
         )
 
     def __init__(self, *args, **kwargs):
-
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = "post"
@@ -615,26 +717,6 @@ class CodeForm(forms.ModelForm):
             ),
             Div(
                 Field(
-                    "best_code_1",
-                    wrapper_class="col-md-4",
-                    rows="2",
-                    css_class="form-control",
-                    autofocus="autofocus",
-                ),
-                Field(
-                    "best_code_2",
-                    wrapper_class="col-md-4",
-                    css_class="form-control",
-                ),
-                Field(
-                    "positivity",
-                    wrapper_class="col-md-4",
-                    css_class="form-control",
-                ),
-                css_class="row mb-3",
-            ),
-            Div(
-                Field(
                     "comments_better",
                     readonly=True,
                     wrapper_class="col-md-9",
@@ -643,24 +725,7 @@ class CodeForm(forms.ModelForm):
                 ),
                 css_class="row mb-3",
             ),
-            Div(
-                Field(
-                    "improve_code_1",
-                    wrapper_class="col-md-4",
-                    css_class="form-control",
-                ),
-                Field(
-                    "improve_code_2",
-                    wrapper_class="col-md-4",
-                    css_class="form-control",
-                ),
-                Field(
-                    "criticality",
-                    wrapper_class="col-md-4",
-                    css_class="form-control",
-                ),
-                css_class="row mb-3",
-            ),
+            CodingLayout(),
             Submit("submit", "Save and next form"),
             Submit("submit-back", "Save and back to list"),
         )

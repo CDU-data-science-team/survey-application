@@ -96,6 +96,11 @@ class PersonCreateView(
 
         return super().setup(request, *args, **kwargs)
 
+    def get_form_kwargs(self) -> Dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs["request"] = self.request
+        return kwargs
+
     def form_valid(self, form: Any) -> HttpResponse:
         form.instance.added_by = self.request.user
         return super().form_valid(form)
@@ -133,6 +138,11 @@ class PersonUpdateView(
             self.form_class = AccessibleForm
         return super().get_form_class()
 
+    def get_form_kwargs(self) -> Dict[str, Any]:
+        kwargs = super().get_form_kwargs()
+        kwargs["request"] = self.request
+        return kwargs
+
     def form_valid(self, form: AdultForm) -> HttpResponse:
         form.instance.added_by = self.request.user
         return super().form_valid(form)
@@ -158,7 +168,14 @@ class ResultsListView(LoginRequiredMixin, ListView):
         filterset = ResultFilter(self.request.GET, queryset)
         queryset = (
             filterset.qs.select_subclasses()
-            .prefetch_related("team", "added_by")
+            .prefetch_related(
+                "team",
+                "added_by",
+                "best_code_1",
+                "best_code_2",
+                "improve_code_1",
+                "improve_code_2",
+            )
             .order_by("-created_at")
         )
         return queryset
