@@ -121,568 +121,490 @@ class CodingLayout(Layout):
         )
 
 
-class AdultForm(forms.ModelForm):
+class PersonForm(forms.ModelForm):
+    """
+    Base form for all person forms.
+    """
+
+    class Meta:
+        model = Person
+        exclude = ()
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request", "")
+
+        super().__init__(*args, **kwargs)
+        self.helper = self.get_form_helper()
+
+        if self.request.user.has_perm("web.code_response"):
+            self.helper.layout.append(CodingLayout())
+
+    def get_form_helper(self) -> FormHelper:
+        """
+        Builds the form helper configuration
+        """
+        helper = FormHelper()
+        helper.form_method = "post"
+        helper.form_tag = False
+        helper.layout = self.get_form_layout()
+        return helper
+
+    def get_form_layout(self) -> Layout:
+        """
+        Override to explicitly build the form layout
+        """
+        layout = Layout(
+            Div(
+                Field(
+                    "team",
+                    wrapper_class="col-md-4",
+                    css_class="form-control",
+                    autofocus="autofocus",
+                ),
+                css_class="row",
+            ),
+        )
+        return layout
+
+
+class AdultForm(PersonForm):
     class Meta:
         model = Adult
-        fields = (
-            "team",
-            "carer_type",
-            "experience",
-            "listening",
-            "explaining",
-            "kind",
-            "treatment",
-            "positive",
-            "comments_good",
-            "best_code_1",
-            "best_code_2",
-            "positivity",
-            "comments_better",
-            "improve_code_1",
-            "improve_code_2",
-            "criticality",
-            "comments_public",
-            "gender",
-            "ethnic_group",
-            "disability",
-            "religion",
-            "sexual_orientation",
-            "age",
-            "relationship",
-            "pregnant",
-            "baby",
+        exclude = ()
+
+    def get_form_layout(self) -> Layout:
+        layout = super().get_form_layout()
+        layout.append(
+            Layout(
+                Div(
+                    Field(
+                        "carer_type",
+                        wrapper_class="col-md-4",
+                        css_class="form-control",
+                    ),
+                    css_class="row",
+                ),
+                Div(
+                    Field(
+                        "experience",
+                        wrapper_class="col-md-4",
+                        css_class="form-control",
+                    ),
+                    Field(
+                        "listening",
+                        wrapper_class="col-md-4",
+                        css_class="form-control",
+                    ),
+                    Field(
+                        "explaining",
+                        wrapper_class="col-md-4",
+                        css_class="form-control",
+                    ),
+                    css_class="row",
+                ),
+                Div(
+                    Field(
+                        "kind",
+                        wrapper_class="col-md-4",
+                        css_class="form-control",
+                    ),
+                    Field(
+                        "treatment",
+                        wrapper_class="col-md-4",
+                        css_class="form-control",
+                    ),
+                    Field(
+                        "positive",
+                        wrapper_class="col-md-4",
+                        css_class="form-control",
+                    ),
+                    css_class="row",
+                ),
+                Div(
+                    Field(
+                        "comments_good",
+                        wrapper_class="col-md-6",
+                        rows="3",
+                        css_class="form-control",
+                    ),
+                    Field(
+                        "comments_better",
+                        wrapper_class="col-md-6",
+                        rows="3",
+                        css_class="form-control",
+                    ),
+                    css_class="row",
+                ),
+                Field(
+                    "comments_public",
+                    wrapper_class="col-md-4",
+                    css_class="form-control",
+                ),
+                Div(
+                    Field("gender", wrapper_class="col-md-4", css_class="form-control"),
+                    Field(
+                        "ethnic_group",
+                        wrapper_class="col-md-4",
+                        css_class="form-control",
+                    ),
+                    Field(
+                        "disability", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    css_class="row",
+                ),
+                Div(
+                    Field(
+                        "religion", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    Field(
+                        "sexual_orientation",
+                        wrapper_class="col-md-4",
+                        css_class="form-control",
+                    ),
+                    Field("age", wrapper_class="col-md-4", css_class="form-control"),
+                    css_class="row",
+                ),
+                Div(
+                    Field(
+                        "relationship",
+                        wrapper_class="col-md-4",
+                        css_class="form-control",
+                    ),
+                    Field(
+                        "pregnant", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    Field("baby", wrapper_class="col-md-4", css_class="form-control"),
+                    css_class="row",
+                ),
+            )
         )
-
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop("request")
-
-        has_code_permissions = False
-        if self.request.user.has_perm("web.code_response"):
-            has_code_permissions = True
-
-        super().__init__(*args, **kwargs)
-
-        self.helper = FormHelper()
-        self.helper.form_method = "post"
-        self.helper.form_tag = False
-        self.helper.layout = Layout(
-            Div(
-                Field(
-                    "team",
-                    wrapper_class="col-md-4",
-                    css_class="form-control",
-                    autofocus="autofocus",
-                ),
-                css_class="row",
-            ),
-            Div(
-                Field(
-                    "carer_type",
-                    wrapper_class="col-md-4",
-                    css_class="form-control",
-                ),
-                css_class="row",
-            ),
-            Div(
-                Field(
-                    "experience",
-                    wrapper_class="col-md-4",
-                    css_class="form-control",
-                ),
-                Field(
-                    "listening",
-                    wrapper_class="col-md-4",
-                    css_class="form-control",
-                ),
-                Field(
-                    "explaining",
-                    wrapper_class="col-md-4",
-                    css_class="form-control",
-                ),
-                css_class="row",
-            ),
-            Div(
-                Field(
-                    "kind",
-                    wrapper_class="col-md-4",
-                    css_class="form-control",
-                ),
-                Field(
-                    "treatment",
-                    wrapper_class="col-md-4",
-                    css_class="form-control",
-                ),
-                Field(
-                    "positive",
-                    wrapper_class="col-md-4",
-                    css_class="form-control",
-                ),
-                css_class="row",
-            ),
-            Div(
-                Field(
-                    "comments_good",
-                    wrapper_class="col-md-6",
-                    rows="3",
-                    css_class="form-control",
-                ),
-                Field(
-                    "comments_better",
-                    wrapper_class="col-md-6",
-                    rows="3",
-                    css_class="form-control",
-                ),
-                css_class="row",
-            ),
-            Field(
-                "comments_public", wrapper_class="col-md-4", css_class="form-control"
-            ),
-            Div(
-                Field("gender", wrapper_class="col-md-4", css_class="form-control"),
-                Field(
-                    "ethnic_group", wrapper_class="col-md-4", css_class="form-control"
-                ),
-                Field("disability", wrapper_class="col-md-4", css_class="form-control"),
-                css_class="row",
-            ),
-            Div(
-                Field("religion", wrapper_class="col-md-4", css_class="form-control"),
-                Field(
-                    "sexual_orientation",
-                    wrapper_class="col-md-4",
-                    css_class="form-control",
-                ),
-                Field("age", wrapper_class="col-md-4", css_class="form-control"),
-                css_class="row",
-            ),
-            Div(
-                Field(
-                    "relationship", wrapper_class="col-md-4", css_class="form-control"
-                ),
-                Field("pregnant", wrapper_class="col-md-4", css_class="form-control"),
-                Field("baby", wrapper_class="col-md-4", css_class="form-control"),
-                css_class="row",
-            ),
-        )
-        if has_code_permissions:
-            self.helper.layout.append(CodingLayout())
+        return layout
 
 
-class ChildForm(forms.ModelForm):
+class ChildForm(PersonForm):
     class Meta:
         model = Child
-        fields = (
-            "team",
-            "carer_type",
-            "experience",
-            "listening",
-            "explaining",
-            "kind",
-            "treatment",
-            "positive",
-            "comments_good",
-            "best_code_1",
-            "best_code_2",
-            "positivity",
-            "comments_better",
-            "improve_code_1",
-            "improve_code_2",
-            "criticality",
-            "comments_public",
-            "gender",
-            "ethnic_group",
-            "disability",
-            "religion",
-            "age",
-        )
+        exclude = ()
 
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop("request")
-
-        has_code_permissions = False
-        if self.request.user.has_perm("web.code_response"):
-            has_code_permissions = True
-
-        super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_method = "post"
-        self.helper.form_tag = False
-        self.helper.layout = Layout(
-            Div(
+    def get_form_layout(self) -> Layout:
+        layout = super().get_form_layout()
+        layout.append(
+            Layout(
+                Div(
+                    Field(
+                        "carer_type",
+                        wrapper_class="col-md-4",
+                        css_class="form-control",
+                    ),
+                    css_class="row",
+                ),
+                Div(
+                    Field(
+                        "experience", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    Field(
+                        "listening", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    Field(
+                        "explaining", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    css_class="row",
+                ),
+                Div(
+                    Field("kind", wrapper_class="col-md-4", css_class="form-control"),
+                    Field(
+                        "treatment", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    Field(
+                        "positive", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    css_class="row",
+                ),
+                Div(
+                    Field(
+                        "comments_good",
+                        wrapper_class="col-md-6",
+                        rows="3",
+                        css_class="form-control",
+                    ),
+                    Field(
+                        "comments_better",
+                        wrapper_class="col-md-6",
+                        rows="3",
+                        css_class="form-control",
+                    ),
+                    css_class="row",
+                ),
                 Field(
-                    "team",
+                    "comments_public",
                     wrapper_class="col-md-4",
                     css_class="form-control",
-                    autofocus="autofocus",
                 ),
-                css_class="row",
-            ),
-            Div(
-                Field(
-                    "carer_type",
-                    wrapper_class="col-md-4",
-                    css_class="form-control",
+                Div(
+                    Field("gender", wrapper_class="col-md-4", css_class="form-control"),
+                    Field(
+                        "ethnic_group",
+                        wrapper_class="col-md-4",
+                        css_class="form-control",
+                    ),
+                    Field(
+                        "disability", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    css_class="row",
                 ),
-                css_class="row",
-            ),
-            Div(
-                Field("experience", wrapper_class="col-md-4", css_class="form-control"),
-                Field("listening", wrapper_class="col-md-4", css_class="form-control"),
-                Field("explaining", wrapper_class="col-md-4", css_class="form-control"),
-                css_class="row",
-            ),
-            Div(
-                Field("kind", wrapper_class="col-md-4", css_class="form-control"),
-                Field("treatment", wrapper_class="col-md-4", css_class="form-control"),
-                Field("positive", wrapper_class="col-md-4", css_class="form-control"),
-                css_class="row",
-            ),
-            Div(
-                Field(
-                    "comments_good",
-                    wrapper_class="col-md-6",
-                    rows="3",
-                    css_class="form-control",
+                Div(
+                    Field(
+                        "religion", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    Field("age", wrapper_class="col-md-4", css_class="form-control"),
+                    css_class="row",
                 ),
-                Field(
-                    "comments_better",
-                    wrapper_class="col-md-6",
-                    rows="3",
-                    css_class="form-control",
-                ),
-                css_class="row",
-            ),
-            Field(
-                "comments_public", wrapper_class="col-md-4", css_class="form-control"
-            ),
-            Div(
-                Field("gender", wrapper_class="col-md-4", css_class="form-control"),
-                Field(
-                    "ethnic_group", wrapper_class="col-md-4", css_class="form-control"
-                ),
-                Field("disability", wrapper_class="col-md-4", css_class="form-control"),
-                css_class="row",
-            ),
-            Div(
-                Field("religion", wrapper_class="col-md-4", css_class="form-control"),
-                Field("age", wrapper_class="col-md-4", css_class="form-control"),
-                css_class="row",
-            ),
+            )
         )
-        if has_code_permissions:
-            self.helper.layout.append(CodingLayout())
+        return layout
 
 
-class YoungCarerForm(forms.ModelForm):
+class YoungCarerForm(PersonForm):
     class Meta:
         model = YoungCarer
-        fields = (
-            "team",
-            "experience",
-            "listening",
-            "explaining",
-            "kind",
-            "involving",
-            "talking",
-            "worried",
-            "assessment",
-            "comments_good",
-            "best_code_1",
-            "best_code_2",
-            "positivity",
-            "comments_better",
-            "improve_code_1",
-            "improve_code_2",
-            "criticality",
-            "comments_public",
-            "gender",
-            "ethnic_group",
-            "disability",
-            "religion",
-            "age",
-        )
+        exclude = ()
 
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop("request")
-
-        has_code_permissions = False
-        if self.request.user.has_perm("web.code_response"):
-            has_code_permissions = True
-
-        super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_method = "post"
-        self.helper.form_tag = False
-        self.helper.layout = Layout(
-            Div(
+    def get_form_layout(self) -> Layout:
+        layout = super().get_form_layout()
+        layout.append(
+            Layout(
+                Div(
+                    Field(
+                        "experience",
+                        wrapper_class="col-md-4",
+                        css_class="form-control",
+                    ),
+                    Field(
+                        "listening", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    Field(
+                        "explaining", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    css_class="row",
+                ),
+                Div(
+                    Field("kind", wrapper_class="col-md-4", css_class="form-control"),
+                    Field(
+                        "involving", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    Field(
+                        "talking", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    css_class="row",
+                ),
+                Div(
+                    Field(
+                        "worried", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    Field(
+                        "assessment", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    css_class="row",
+                ),
+                Div(
+                    Field(
+                        "comments_good",
+                        wrapper_class="col-md-6",
+                        rows="3",
+                        css_class="form-control",
+                    ),
+                    Field(
+                        "comments_better",
+                        wrapper_class="col-md-6",
+                        rows="3",
+                        css_class="form-control",
+                    ),
+                    css_class="row",
+                ),
                 Field(
-                    "team",
+                    "comments_public",
                     wrapper_class="col-md-4",
                     css_class="form-control",
-                    autofocus="autofocus",
                 ),
-                css_class="row",
-            ),
-            Div(
-                Field(
-                    "experience",
-                    wrapper_class="col-md-4",
-                    css_class="form-control",
+                Div(
+                    Field("gender", wrapper_class="col-md-4", css_class="form-control"),
+                    Field(
+                        "ethnic_group",
+                        wrapper_class="col-md-4",
+                        css_class="form-control",
+                    ),
+                    Field(
+                        "disability", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    css_class="row",
                 ),
-                Field("listening", wrapper_class="col-md-4", css_class="form-control"),
-                Field("explaining", wrapper_class="col-md-4", css_class="form-control"),
-                css_class="row",
-            ),
-            Div(
-                Field("kind", wrapper_class="col-md-4", css_class="form-control"),
-                Field("involving", wrapper_class="col-md-4", css_class="form-control"),
-                Field("talking", wrapper_class="col-md-4", css_class="form-control"),
-                css_class="row",
-            ),
-            Div(
-                Field("worried", wrapper_class="col-md-4", css_class="form-control"),
-                Field("assessment", wrapper_class="col-md-4", css_class="form-control"),
-                css_class="row",
-            ),
-            Div(
-                Field(
-                    "comments_good",
-                    wrapper_class="col-md-6",
-                    rows="3",
-                    css_class="form-control",
+                Div(
+                    Field(
+                        "religion", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    Field("age", wrapper_class="col-md-4", css_class="form-control"),
+                    css_class="row",
                 ),
-                Field(
-                    "comments_better",
-                    wrapper_class="col-md-6",
-                    rows="3",
-                    css_class="form-control",
-                ),
-                css_class="row",
-            ),
-            Field(
-                "comments_public", wrapper_class="col-md-4", css_class="form-control"
-            ),
-            Div(
-                Field("gender", wrapper_class="col-md-4", css_class="form-control"),
-                Field(
-                    "ethnic_group", wrapper_class="col-md-4", css_class="form-control"
-                ),
-                Field("disability", wrapper_class="col-md-4", css_class="form-control"),
-                css_class="row",
-            ),
-            Div(
-                Field("religion", wrapper_class="col-md-4", css_class="form-control"),
-                Field("age", wrapper_class="col-md-4", css_class="form-control"),
-                css_class="row",
-            ),
+            )
         )
-        if has_code_permissions:
-            self.helper.layout.append(CodingLayout())
+        return layout
 
 
-class CarerForm(forms.ModelForm):
+class CarerForm(PersonForm):
     class Meta:
         model = Carer
-        fields = (
-            "team",
-            "experience",
-            "listening",
-            "explaining",
-            "kind",
-            "treatment",
-            "support",
-            "worried",
-            "assessment",
-            "comments_good",
-            "best_code_1",
-            "best_code_2",
-            "positivity",
-            "comments_better",
-            "improve_code_1",
-            "improve_code_2",
-            "criticality",
-            "comments_public",
-            "gender",
-            "ethnic_group",
-            "disability",
-            "religion",
-            "sexual_orientation",
-            "age",
-            "relationship",
-            "carer_type",
+        exclude = ()
+
+    def get_form_layout(self) -> Layout:
+        layout = super().get_form_layout()
+        layout.append(
+            Layout(
+                Div(
+                    Field(
+                        "experience",
+                        wrapper_class="col-md-4",
+                        css_class="form-control",
+                    ),
+                    Field(
+                        "listening", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    Field(
+                        "explaining", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    css_class="row",
+                ),
+                Div(
+                    Field("kind", wrapper_class="col-md-4", css_class="form-control"),
+                    Field(
+                        "treatment", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    Field(
+                        "support", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    css_class="row",
+                ),
+                Div(
+                    Field(
+                        "worried", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    Field(
+                        "assessment", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    css_class="row",
+                ),
+                Div(
+                    Field(
+                        "comments_good",
+                        wrapper_class="col-md-6",
+                        rows="3",
+                        css_class="form-control",
+                    ),
+                    Field(
+                        "comments_better",
+                        wrapper_class="col-md-6",
+                        rows="3",
+                        css_class="form-control",
+                    ),
+                    css_class="row",
+                ),
+                Field(
+                    "comments_public",
+                    wrapper_class="col-md-4",
+                    css_class="form-control",
+                ),
+                Div(
+                    Field("gender", wrapper_class="col-md-4", css_class="form-control"),
+                    Field(
+                        "ethnic_group",
+                        wrapper_class="col-md-4",
+                        css_class="form-control",
+                    ),
+                    Field(
+                        "disability", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    css_class="row",
+                ),
+                Div(
+                    Field(
+                        "religion", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    Field(
+                        "sexual_orientation",
+                        wrapper_class="col-md-4",
+                        css_class="form-control",
+                    ),
+                    Field("age", wrapper_class="col-md-4", css_class="form-control"),
+                    css_class="row",
+                ),
+                Div(
+                    Field(
+                        "relationship",
+                        wrapper_class="col-md-4",
+                        css_class="form-control",
+                    ),
+                    Field(
+                        "carer_type", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    css_class="row",
+                ),
+            )
         )
-
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop("request")
-
-        has_code_permissions = False
-        if self.request.user.has_perm("web.code_response"):
-            has_code_permissions = True
-
-        super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_method = "post"
-        self.helper.form_tag = False
-        self.helper.layout = Layout(
-            Div(
-                Field(
-                    "team",
-                    wrapper_class="col-md-4",
-                    css_class="form-control",
-                    autofocus="autofocus",
-                ),
-                css_class="row",
-            ),
-            Div(
-                Field(
-                    "experience",
-                    wrapper_class="col-md-4",
-                    css_class="form-control",
-                ),
-                Field("listening", wrapper_class="col-md-4", css_class="form-control"),
-                Field("explaining", wrapper_class="col-md-4", css_class="form-control"),
-                css_class="row",
-            ),
-            Div(
-                Field("kind", wrapper_class="col-md-4", css_class="form-control"),
-                Field("treatment", wrapper_class="col-md-4", css_class="form-control"),
-                Field("support", wrapper_class="col-md-4", css_class="form-control"),
-                css_class="row",
-            ),
-            Div(
-                Field("worried", wrapper_class="col-md-4", css_class="form-control"),
-                Field("assessment", wrapper_class="col-md-4", css_class="form-control"),
-                css_class="row",
-            ),
-            Div(
-                Field(
-                    "comments_good",
-                    wrapper_class="col-md-6",
-                    rows="3",
-                    css_class="form-control",
-                ),
-                Field(
-                    "comments_better",
-                    wrapper_class="col-md-6",
-                    rows="3",
-                    css_class="form-control",
-                ),
-                css_class="row",
-            ),
-            Field(
-                "comments_public", wrapper_class="col-md-4", css_class="form-control"
-            ),
-            Div(
-                Field("gender", wrapper_class="col-md-4", css_class="form-control"),
-                Field(
-                    "ethnic_group", wrapper_class="col-md-4", css_class="form-control"
-                ),
-                Field("disability", wrapper_class="col-md-4", css_class="form-control"),
-                css_class="row",
-            ),
-            Div(
-                Field("religion", wrapper_class="col-md-4", css_class="form-control"),
-                Field(
-                    "sexual_orientation",
-                    wrapper_class="col-md-4",
-                    css_class="form-control",
-                ),
-                Field("age", wrapper_class="col-md-4", css_class="form-control"),
-                css_class="row",
-            ),
-            Div(
-                Field(
-                    "relationship", wrapper_class="col-md-4", css_class="form-control"
-                ),
-                Field("carer_type", wrapper_class="col-md-4", css_class="form-control"),
-                css_class="row",
-            ),
-        )
-        if has_code_permissions:
-            self.helper.layout.append(CodingLayout())
+        return layout
 
 
-class AccessibleForm(forms.ModelForm):
+class AccessibleForm(PersonForm):
     class Meta:
         model = Accessible
-        fields = (
-            "team",
-            "carer_type",
-            "experience",
-            "listening",
-            "explaining",
-            "kind",
-            "ask",
-            "better",
-            "comments_good",
-            "best_code_1",
-            "best_code_2",
-            "positivity",
-            "comments_better",
-            "improve_code_1",
-            "improve_code_2",
-            "criticality",
+        exclude = ()
+
+    def get_form_layout(self) -> Layout:
+        layout = super().get_form_layout()
+        layout.append(
+            Layout(
+                Div(
+                    Field(
+                        "carer_type",
+                        wrapper_class="col-md-4",
+                        css_class="form-control",
+                    ),
+                    css_class="row",
+                ),
+                Div(
+                    Field(
+                        "experience", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    Field(
+                        "listening", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    Field(
+                        "explaining", wrapper_class="col-md-4", css_class="form-control"
+                    ),
+                    css_class="row",
+                ),
+                Div(
+                    Field("kind", wrapper_class="col-md-4", css_class="form-control"),
+                    Field("ask", wrapper_class="col-md-4", css_class="form-control"),
+                    Field("better", wrapper_class="col-md-4", css_class="form-control"),
+                    css_class="row",
+                ),
+                Div(
+                    Field(
+                        "comments_good",
+                        wrapper_class="col-md-6",
+                        rows="3",
+                        css_class="form-control",
+                    ),
+                    Field(
+                        "comments_better",
+                        wrapper_class="col-md-6",
+                        rows="3",
+                        css_class="form-control",
+                    ),
+                    css_class="row",
+                ),
+            )
         )
-
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop("request")
-
-        has_code_permissions = False
-        if self.request.user.has_perm("web.code_response"):
-            has_code_permissions = True
-
-        super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_method = "post"
-        self.helper.form_tag = False
-        self.helper.layout = Layout(
-            Div(
-                Field(
-                    "team",
-                    wrapper_class="col-md-4",
-                    css_class="form-control",
-                    autofocus="autofocus",
-                ),
-                css_class="row",
-            ),
-            Div(
-                Field(
-                    "carer_type",
-                    wrapper_class="col-md-4",
-                    css_class="form-control",
-                ),
-                css_class="row",
-            ),
-            Div(
-                Field("experience", wrapper_class="col-md-4", css_class="form-control"),
-                Field("listening", wrapper_class="col-md-4", css_class="form-control"),
-                Field("explaining", wrapper_class="col-md-4", css_class="form-control"),
-                css_class="row",
-            ),
-            Div(
-                Field("kind", wrapper_class="col-md-4", css_class="form-control"),
-                Field("ask", wrapper_class="col-md-4", css_class="form-control"),
-                Field("better", wrapper_class="col-md-4", css_class="form-control"),
-                css_class="row",
-            ),
-            Div(
-                Field(
-                    "comments_good",
-                    wrapper_class="col-md-6",
-                    rows="3",
-                    css_class="form-control",
-                ),
-                Field(
-                    "comments_better",
-                    wrapper_class="col-md-6",
-                    rows="3",
-                    css_class="form-control",
-                ),
-                css_class="row",
-            ),
-        )
-        if has_code_permissions:
-            self.helper.layout.append(CodingLayout())
+        return layout
 
 
 class CodeForm(forms.ModelForm):
