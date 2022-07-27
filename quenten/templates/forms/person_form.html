@@ -6,8 +6,12 @@
 
 {% with url=request.resolver_match.url_name %}
 
+{% if object.paper_index %}
+  <h2>Paper index: {{ object.paper_index}}</h2>
+{% endif %}
+
 {% if url == 'result-detail' %}
-  <a href="{% url 'result-update' uuid=object.id %}" class="btn btn-primary mt-3 mb-5">Edit</a>
+  <a href="{% url 'result-update' object.paper_index %}" class="btn btn-primary mt-3 mb-5">Edit</a>
   <fieldset disabled>
 {% else %}
   <fieldset>

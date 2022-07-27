@@ -86,7 +86,7 @@ class PersonCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return super().form_valid(form)
 
     def get_success_message(self, cleaned_data: Dict[str, str]) -> str:
-        return f"Submission successful. id: {self.object.id}"
+        return f"Submission successful. Paper index is: {self.object.paper_index}"
 
 
 class PersonUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
@@ -100,7 +100,7 @@ class PersonUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     success_url = "/results/"
 
     def get_object(self) -> Person:
-        return Person.objects.get_subclass(id=self.kwargs.get("uuid"))
+        return Person.objects.get_subclass(paper_index=self.kwargs.get("paper_index"))
 
     def get_form_class(self) -> Form:
         if type(self.object) == Adult:
@@ -120,7 +120,7 @@ class PersonUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return super().form_valid(form)
 
     def get_success_message(self, cleaned_data: Dict[str, str]) -> str:
-        return f"Update successful. id: {self.object.id}"
+        return f"Update successful. Paper index is: {self.object.paper_index}"
 
 
 class ResultsListView(LoginRequiredMixin, ListView):
@@ -179,7 +179,7 @@ class UncodedUpdateView(LoginRequiredMixin, UpdateView):
     template_name: str = "forms/person_form.html"
 
     def get_object(self) -> Person:
-        return Person.objects.get(id=self.kwargs.get("uuid"))
+        return Person.objects.get(paper_index=self.kwargs.get("paper_index"))
 
     def get_success_url(self) -> str:
         return (
