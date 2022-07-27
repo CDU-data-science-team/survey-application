@@ -3,6 +3,10 @@ from web import forms, models
 
 
 class ResultFilter(django_filters.FilterSet):
+    """
+    Filter for use on the responses list view.
+    """
+
     _PERSONS = [
         ("adult", "Adult"),
         ("child", "Child / Young Person"),
