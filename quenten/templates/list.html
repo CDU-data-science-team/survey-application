@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load web_extras %}
 
 {% block title %}Results list{% endblock %}
 
@@ -6,29 +7,49 @@
 
 <h1>All Results</h1>
 
+<form method="get" class="form-inline mt-4 mb-4">
+
+    {% load crispy_forms_tags %}
+
+    {% crispy filter.form %}
+</form>
+
 <table class="table table-striped">
     <thead>
       <tr>
-        <th scope="col">Paper Index</th>
-        <th scope="col">Date</th>
+        <th scope="col" class="text-center">Paper Index</th>
+        <th scope="col">Created</th>
+        <th scope="col">Form Type</th>
         <th scope="col">Team Name</th>
         <th scope="col">Added by</th>
+        <th scope="col" class="text-center">Coded</th>
       </tr>
     </thead>
     <tbody>
         {% for item in object_list %}
+            {% get_person_type item as person_type %}
             <tr>
-                <td>
+                <td class="text-center">
                    <a href="{% url 'result-detail' item.paper_index %}">{{ item.paper_index }}</a>
                 </td>
                 <td>
                     {{ item.created_at }}
+                 </td>
+                 <td>
+                     {{ person_type|title }}
+                 </td>
+                <td>
+                    {{ item.team.name|title }}
                 </td>
                 <td>
-                    {{ item.team.name }}
+                    {{ item.added_by|title }}
                 </td>
-                <td>
-                    {{ item.added_by }}
+                <td class="text-center">
+                    {% if item.is_coded %}
+                        <i class="bi bi-check2 text-success"></i>
+                    {% else %}
+                        <i class="bi bi-x text-danger"></i>
+                    {% endif %}
                 </td>
             </tr>
         {% empty %}
@@ -36,5 +57,11 @@
         {% endfor %}
     </tbody>
   </table>
+
+  {% if is_paginated %}
+
+    {% include 'includes/pagination.html' %}
+
+  {% endif %}
 
 {% endblock %}

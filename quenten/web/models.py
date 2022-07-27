@@ -281,8 +281,26 @@ class Person(BaseModel):
         help_text="Please tick here if you DO NOT wish your comments to be made public",
     )
 
+    @property
+    def is_coded(self) -> bool:
+        """
+        Returns false if the response needs to be coded.
+        A response needs coding if it has comments in comments_good or comments_better
+        And the codes best_code_1/2 improve_code_1/2 are blank
+        """
+        if not self.comments_better and not self.comments_good:
+            return True
+        if (
+            not self.best_code_1
+            or not self.best_code_2
+            or not self.improve_code_1
+            or not self.improve_code_2
+        ):
+            return False
+        return True
+
     def __str__(self) -> str:
-        return f"{self.created_at}, {self.team.name}"
+        return f"{self.paper_index}"
 
     def get_absolute_url(self):
         return reverse("result-detail", self.paper_index)

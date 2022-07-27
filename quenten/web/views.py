@@ -1,3 +1,4 @@
+import re
 from typing import Any, Dict
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -10,6 +11,7 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, FormView, ListView, UpdateView
 
+from .filters import ResultFilter
 from .forms import (
     AccessibleForm,
     AdultForm,
@@ -41,7 +43,17 @@ class PersonSelectView(LoginRequiredMixin, FormView):
         """
         Override to redirect to the users chosen form.
         """
-        user_choice = self.form.cleaned_data["choice"]
+        form_choice = self.form.data["form-choice"]
+        if form_choice == "Adult Form":
+            user_choice = "adult"
+        elif form_choice == "Young Person Form":
+            user_choice = "child"
+        elif form_choice == "Carer Form":
+            user_choice = "carer"
+        elif form_choice == "Young Carer Form":
+            user_choice = "youngcarer"
+        elif form_choice == "Accessible Form":
+            user_choice = "accessible"
         self.success_url = f"/{user_choice}"
         return super().get_success_url()
 
@@ -130,18 +142,39 @@ class ResultsListView(LoginRequiredMixin, ListView):
 
     template_name: str = "list.html"
     model: Person
+    paginate_by = 20
 
     def get_queryset(self) -> QuerySet:
         """
-        Override.
+        Override to select subclasses within the query.
         """
-        return (
-            Person.objects.select_subclasses(
-                Adult, Child, YoungCarer, Carer, Accessible
-            )
+        queryset = Person.objects.all()
+        filterset = ResultFilter(self.request.GET, queryset)
+        queryset = (
+            filterset.qs.select_subclasses()
             .prefetch_related("team", "added_by")
             .order_by("-created_at")
         )
+        return queryset
+
+    def get_query_string(self):
+        """
+        Validates the query string if passed through from filter for pagination
+        """
+        query_string = self.request.META.get("QUERY_STRING", "")
+        # Get all queries excluding pages from the request's meta
+        validated_query_string = "&".join(
+            [x for x in re.findall(r"(\w*=\w{1,})", query_string) if "page=" not in x]
+        )
+        return f"&{validated_query_string.lower()}" if validated_query_string else ""
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        queryset = self.get_queryset()
+        filterset = ResultFilter(self.request.GET, queryset)
+        context["query_string"] = self.get_query_string()
+        context["filter"] = filterset
+        return context
 
 
 class UncodedListView(LoginRequiredMixin, ListView):
@@ -151,6 +184,7 @@ class UncodedListView(LoginRequiredMixin, ListView):
 
     template_name: str = "uncoded_list.html"
     model: Person
+    paginate_by = 20
 
     def get_queryset(self) -> QuerySet:
         """
@@ -166,7 +200,11 @@ class UncodedListView(LoginRequiredMixin, ListView):
                 | Q(improve_code_2__isnull=True)
             )
         )
-        return q.prefetch_related("team", "added_by").order_by("-created_at")
+        return (
+            q.select_subclasses()
+            .prefetch_related("team", "added_by")
+            .order_by("-created_at")
+        )
 
 
 class UncodedUpdateView(LoginRequiredMixin, UpdateView):
