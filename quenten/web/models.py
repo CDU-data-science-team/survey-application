@@ -205,7 +205,7 @@ class Team(BaseModel):
 
     directorate = models.ForeignKey(Directorate, on_delete=models.PROTECT)
     name = models.CharField(max_length=128)
-    code = models.DecimalField(max_digits=3, decimal_places=3)
+    code = models.DecimalField(max_digits=7, decimal_places=3)
     date_from = models.DateField()
     date_to = models.DateField()
     time = models.IntegerField(null=True, blank=True)
