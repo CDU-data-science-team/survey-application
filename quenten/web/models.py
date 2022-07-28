@@ -179,8 +179,6 @@ class PregnancyMixin(models.Model):
     Mixin for pregnancy fields.
     """
 
-    form_name = "Pregnancy"
-
     class Meta:
         abstract = True
 
@@ -243,8 +241,6 @@ class Person(BaseModel):
     """
     Base class for all forms.
     """
-
-    form_name = "Person"
 
     class Meta:
 
