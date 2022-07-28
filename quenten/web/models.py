@@ -17,6 +17,25 @@ class BaseModel(models.Model):
         abstract = True
 
 
+class FormResponses(models.Model):
+    """
+    Forms model for response types.
+    Used for filtering question responses.
+    """
+
+    form_choices = [
+        ("adult", "Adult"),
+        ("child", "Child"),
+        ("carer", "Carer"),
+        ("young carer", "Young Carer"),
+        ("accessible", "Accessible"),
+    ]
+    name = models.CharField(max_length=20, choices=form_choices, unique=True)
+
+    def __str__(self) -> str:
+        return f"{self.name}"
+
+
 class QuestionOption(BaseModel):
     """
     Base model for all responses.
@@ -27,6 +46,11 @@ class QuestionOption(BaseModel):
     sort_order = models.PositiveIntegerField()
     hidden = models.BooleanField(
         default=False, help_text="Select if the field needs to be hidden on the form"
+    )
+    forms = models.ManyToManyField(
+        FormResponses,
+        help_text="Select which forms the response should be displayed on",
+        blank=True,
     )
 
     class Meta:
@@ -61,10 +85,6 @@ class Age(QuestionOption):
     pass
 
 
-class ChildAge(QuestionOption):
-    pass
-
-
 class Relationship(QuestionOption):
     pass
 
@@ -78,10 +98,6 @@ class ServiceUser(QuestionOption):
 
 
 class Rating(QuestionOption):
-    pass
-
-
-class ChildRating(QuestionOption):
     pass
 
 
@@ -102,6 +118,8 @@ class DemographicsMixin(models.Model):
     Mixin for demographic fields.
     """
 
+    form_name = "Demographics"
+
     class Meta:
         abstract = True
 
@@ -110,14 +128,14 @@ class DemographicsMixin(models.Model):
         on_delete=models.PROTECT,
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     ethnic_group = models.ForeignKey(
         EthnicGroup,
         on_delete=models.PROTECT,
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     disability = models.ForeignKey(
         Disability,
@@ -125,28 +143,28 @@ class DemographicsMixin(models.Model):
         help_text="Do you have a long term disability or a long-term health condition which affects your day to day activities?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     religion = models.ForeignKey(
         Religion,
         on_delete=models.PROTECT,
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     sexual_orientation = models.ForeignKey(
         SexualOrientation,
         on_delete=models.PROTECT,
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     age = models.ForeignKey(
         Age,
         on_delete=models.PROTECT,
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     relationship = models.ForeignKey(
         Relationship,
@@ -154,7 +172,7 @@ class DemographicsMixin(models.Model):
         help_text="What is your relationship status?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
 
 
@@ -162,6 +180,8 @@ class PregnancyMixin(models.Model):
     """
     Mixin for pregnancy fields.
     """
+
+    form_name = "Pregnancy"
 
     class Meta:
         abstract = True
@@ -173,7 +193,7 @@ class PregnancyMixin(models.Model):
         help_text="Are you pregnant at this time?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     baby = models.ForeignKey(
         Pregnant,
@@ -182,7 +202,7 @@ class PregnancyMixin(models.Model):
         help_text="Have you had a baby within the last 26 weeks?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
 
 
@@ -226,7 +246,10 @@ class Person(BaseModel):
     Base class for all forms.
     """
 
+    form_name = "Person"
+
     class Meta:
+
         ordering = ["updated_at"]
         permissions = [
             ("add_response", "Can add new form responses"),
@@ -249,6 +272,7 @@ class Person(BaseModel):
         on_delete=models.PROTECT,
         null=True,
         blank=True,
+        limit_choices_to={"forms__name": form_name},
     )
     best_code_2 = models.ForeignKey(
         CommentsCode,
@@ -256,6 +280,7 @@ class Person(BaseModel):
         on_delete=models.PROTECT,
         null=True,
         blank=True,
+        limit_choices_to={"forms__name": form_name},
     )
     positivity = models.PositiveIntegerField(null=True, blank=True)
 
@@ -268,6 +293,7 @@ class Person(BaseModel):
         on_delete=models.PROTECT,
         null=True,
         blank=True,
+        limit_choices_to={"forms__name": form_name},
     )
     improve_code_2 = models.ForeignKey(
         CommentsCode,
@@ -275,6 +301,7 @@ class Person(BaseModel):
         on_delete=models.PROTECT,
         null=True,
         blank=True,
+        limit_choices_to={"forms__name": form_name},
     )
     criticality = models.PositiveIntegerField(null=True, blank=True)
 
@@ -380,6 +407,8 @@ class Adult(Person, DemographicsMixin, PregnancyMixin):
     Adult survey form.
     """
 
+    form_name = "Adult"
+
     class Meta:
         pass
 
@@ -389,7 +418,7 @@ class Adult(Person, DemographicsMixin, PregnancyMixin):
         help_text="I am a: ",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     experience = models.ForeignKey(
         Rating,
@@ -398,7 +427,7 @@ class Adult(Person, DemographicsMixin, PregnancyMixin):
         help_text="Overall, how was your experience of our service?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     listening = models.ForeignKey(
         Rating,
@@ -407,7 +436,7 @@ class Adult(Person, DemographicsMixin, PregnancyMixin):
         help_text="How good were our services at listening to you?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     explaining = models.ForeignKey(
         Rating,
@@ -416,7 +445,7 @@ class Adult(Person, DemographicsMixin, PregnancyMixin):
         help_text="How good were our services at explaining information clearly?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     kind = models.ForeignKey(
         Rating,
@@ -425,7 +454,7 @@ class Adult(Person, DemographicsMixin, PregnancyMixin):
         help_text="How good were our services at being kind to you?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     treatment = models.ForeignKey(
         Rating,
@@ -434,7 +463,7 @@ class Adult(Person, DemographicsMixin, PregnancyMixin):
         help_text="How good were our services at involving you in decisions about your care or treatment?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     positive = models.ForeignKey(
         Rating,
@@ -443,7 +472,14 @@ class Adult(Person, DemographicsMixin, PregnancyMixin):
         help_text="How good were our services at making a positive difference to your health and wellbeing?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
+    )
+    age = models.ForeignKey(
+        Age,
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
 
 
@@ -451,6 +487,8 @@ class Child(Person, DemographicsMixin):
     """
     Child survey form.
     """
+
+    form_name = "Child"
 
     class Meta:
         pass
@@ -461,7 +499,7 @@ class Child(Person, DemographicsMixin):
         help_text="I am a: ",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     experience = models.ForeignKey(
         Rating,
@@ -470,59 +508,59 @@ class Child(Person, DemographicsMixin):
         help_text="Overall, how was your experience of our service?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     listening = models.ForeignKey(
-        ChildRating,
+        Rating,
         related_name="child_listening",
         on_delete=models.PROTECT,
         help_text="How good were our services at listening to you?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     explaining = models.ForeignKey(
-        ChildRating,
+        Rating,
         related_name="child_explaining",
         on_delete=models.PROTECT,
         help_text="How good were our services at explaining information clearly?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     kind = models.ForeignKey(
-        ChildRating,
+        Rating,
         related_name="child_kind",
         on_delete=models.PROTECT,
         help_text="How good were our services at being kind to you?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     treatment = models.ForeignKey(
-        ChildRating,
+        Rating,
         related_name="child_treatment",
         on_delete=models.PROTECT,
         help_text="How good were our services at involving you in decisions about your care or treatment?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     positive = models.ForeignKey(
-        ChildRating,
+        Rating,
         related_name="child_positive",
         on_delete=models.PROTECT,
         help_text="How good were our services at making a positive difference to your health and wellbeing?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     age = models.ForeignKey(
-        ChildAge,
+        Age,
         on_delete=models.PROTECT,
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
 
 
@@ -530,6 +568,8 @@ class Carer(Person, DemographicsMixin):
     """
     Carer survey form.
     """
+
+    form_name = "Carer"
 
     class Meta:
         pass
@@ -541,7 +581,7 @@ class Carer(Person, DemographicsMixin):
         help_text="Overall, how was your experience of our service?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     listening = models.ForeignKey(
         Rating,
@@ -550,7 +590,7 @@ class Carer(Person, DemographicsMixin):
         help_text="How good were our services at listening to you?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     explaining = models.ForeignKey(
         Rating,
@@ -559,7 +599,7 @@ class Carer(Person, DemographicsMixin):
         help_text="How good were our services at explaining information clearly?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     kind = models.ForeignKey(
         Rating,
@@ -568,7 +608,7 @@ class Carer(Person, DemographicsMixin):
         help_text="How good were our services at being kind to you?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     treatment = models.ForeignKey(
         Rating,
@@ -577,7 +617,7 @@ class Carer(Person, DemographicsMixin):
         help_text="How good were our services at involving you in decisions about the care and treatment of the person you care for?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     support = models.ForeignKey(
         Rating,
@@ -594,7 +634,7 @@ class Carer(Person, DemographicsMixin):
         help_text="Did our services tell you who you could contact if you were worried about the person you care for?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     assessment = models.ForeignKey(
         ContactGeneric,
@@ -603,7 +643,7 @@ class Carer(Person, DemographicsMixin):
         help_text="Did we tell you who to contact for a carers assessment?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     carer_type = models.ForeignKey(
         CarerType,
@@ -612,7 +652,7 @@ class Carer(Person, DemographicsMixin):
         help_text="I am a carer, family member, friend, parent or guardian of someone:",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
 
 
@@ -620,6 +660,8 @@ class YoungCarer(Person, DemographicsMixin):
     """
     Young carer survey form.
     """
+
+    form_name = "Young Carer"
 
     class Meta:
         pass
@@ -631,77 +673,77 @@ class YoungCarer(Person, DemographicsMixin):
         help_text="Overall, how was your experience of our service?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     listening = models.ForeignKey(
-        ChildRating,
+        Rating,
         related_name="young_carer_listening",
         on_delete=models.PROTECT,
         help_text="Were our services good at listening to you?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     explaining = models.ForeignKey(
-        ChildRating,
+        Rating,
         related_name="young_carer_explaining",
         on_delete=models.PROTECT,
         help_text="Were our services good at explaining things clearly?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     kind = models.ForeignKey(
-        ChildRating,
+        Rating,
         related_name="young_carer_kind",
         on_delete=models.PROTECT,
         help_text="Were our services good at being kind to you?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     involving = models.ForeignKey(
-        ChildRating,
+        Rating,
         related_name="young_carer_involving",
         on_delete=models.PROTECT,
         help_text="Were our services good at involving you in the way we helped the person you care for?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     talking = models.ForeignKey(
-        ChildRating,
+        Rating,
         related_name="young_carer_talking",
         on_delete=models.PROTECT,
         help_text="Were our services good at talking to you about the support you could have as a carer?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     worried = models.ForeignKey(
-        ChildRating,
+        Rating,
         related_name="young_carer_worried",
         on_delete=models.PROTECT,
         help_text="Did our services tell you who you could contact if you were worried about the person you care for?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     assessment = models.ForeignKey(
-        ChildRating,
+        Rating,
         related_name="young_carer_assessment",
         on_delete=models.PROTECT,
         help_text="Did we tell you who to contact for a carers assessment?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     age = models.ForeignKey(
-        ChildAge,
+        Age,
         on_delete=models.PROTECT,
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
 
 
@@ -709,6 +751,8 @@ class Accessible(Person):
     """
     Accessible survey form.
     """
+
+    form_name = "Accessible"
 
     class Meta:
         pass
@@ -719,59 +763,59 @@ class Accessible(Person):
         help_text="I am a: ",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     experience = models.ForeignKey(
-        ChildRating,
+        Rating,
         related_name="accessible_experience",
         on_delete=models.PROTECT,
         help_text="Did you have a good experience from our staff?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     listening = models.ForeignKey(
-        ChildRating,
+        Rating,
         related_name="accessible_listening",
         on_delete=models.PROTECT,
         help_text="Did our staff listen to you?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     explaining = models.ForeignKey(
-        ChildRating,
+        Rating,
         related_name="accessible_explaining",
         on_delete=models.PROTECT,
         help_text="Did our staff explain things clearly?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     kind = models.ForeignKey(
-        ChildRating,
+        Rating,
         related_name="accessible_kind",
         on_delete=models.PROTECT,
         help_text="Were our staff kind to you?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     ask = models.ForeignKey(
-        ChildRating,
+        Rating,
         related_name="accessible_ask",
         on_delete=models.PROTECT,
         help_text="Did our staff ask you what you wanted?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     better = models.ForeignKey(
-        ChildRating,
+        Rating,
         related_name="accessible_better",
         on_delete=models.PROTECT,
         help_text="Did our staff help you feel better?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False},
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
