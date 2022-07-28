@@ -349,52 +349,6 @@ class Person(BaseModel):
 
         return super().save(*args, **kwargs)
 
-    def get_absolute_url(self):
-        return reverse("result-detail", self.paper_index)
-
-    def save(self, *args, **kwargs) -> None:
-        """
-        Override to set the paper_index from created_at and increment it.
-        """
-        super().save(*args, **kwargs)
-
-        if not self.paper_index:
-            quarter = (self.created_at.month + 2) // 3
-            increment = (
-                Person._base_manager.filter(
-                    created_at__year=self.created_at.year,
-                    created_at__quarter=quarter,
-                    created_at__lt=self.created_at,
-                ).count()
-                + 1
-            )
-            self.paper_index = int(f"{self.created_at.year}{quarter}{increment}")
-
-        return super().save(*args, **kwargs)
-
-    def get_absolute_url(self):
-        return reverse("result-detail", self.paper_index)
-
-    def save(self, *args, **kwargs) -> None:
-        """
-        Override to set the paper_index from created_at and increment it.
-        """
-        super().save(*args, **kwargs)
-
-        if not self.paper_index:
-            quarter = (self.created_at.month + 2) // 3
-            increment = (
-                Person._base_manager.filter(
-                    created_at__year=self.created_at.year,
-                    created_at__quarter=quarter,
-                    created_at__lt=self.created_at,
-                ).count()
-                + 1
-            )
-            self.paper_index = int(f"{self.created_at.year}{quarter}{increment}")
-
-        return super().save(*args, **kwargs)
-
 
 class Adult(Person, DemographicsMixin, PregnancyMixin):
     """
@@ -620,6 +574,7 @@ class Carer(Person, DemographicsMixin):
         help_text="How good were our services at giving you information about support for you as a carer?",
         blank=True,
         null=True,
+        limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     worried = models.ForeignKey(
         ContactGeneric,
