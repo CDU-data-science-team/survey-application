@@ -599,6 +599,13 @@ class Carer(Person, DemographicsMixin):
         null=True,
         limit_choices_to={"hidden": False, "forms__name": form_name},
     )
+    age = models.ForeignKey(
+        Age,
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        limit_choices_to={"hidden": False, "forms__name": form_name},
+    )
 
 
 class YoungCarer(Person, DemographicsMixin):
