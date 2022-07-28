@@ -118,8 +118,6 @@ class DemographicsMixin(models.Model):
     Mixin for demographic fields.
     """
 
-    form_name = "Demographics"
-
     class Meta:
         abstract = True
 
@@ -128,14 +126,14 @@ class DemographicsMixin(models.Model):
         on_delete=models.PROTECT,
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False, "forms__name": form_name},
+        limit_choices_to={"hidden": False},
     )
     ethnic_group = models.ForeignKey(
         EthnicGroup,
         on_delete=models.PROTECT,
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False, "forms__name": form_name},
+        limit_choices_to={"hidden": False},
     )
     disability = models.ForeignKey(
         Disability,
@@ -143,28 +141,28 @@ class DemographicsMixin(models.Model):
         help_text="Do you have a long term disability or a long-term health condition which affects your day to day activities?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False, "forms__name": form_name},
+        limit_choices_to={"hidden": False},
     )
     religion = models.ForeignKey(
         Religion,
         on_delete=models.PROTECT,
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False, "forms__name": form_name},
+        limit_choices_to={"hidden": False},
     )
     sexual_orientation = models.ForeignKey(
         SexualOrientation,
         on_delete=models.PROTECT,
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False, "forms__name": form_name},
+        limit_choices_to={"hidden": False},
     )
     age = models.ForeignKey(
         Age,
         on_delete=models.PROTECT,
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False, "forms__name": form_name},
+        limit_choices_to={"hidden": False},
     )
     relationship = models.ForeignKey(
         Relationship,
@@ -172,7 +170,7 @@ class DemographicsMixin(models.Model):
         help_text="What is your relationship status?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False, "forms__name": form_name},
+        limit_choices_to={"hidden": False},
     )
 
 
@@ -193,7 +191,7 @@ class PregnancyMixin(models.Model):
         help_text="Are you pregnant at this time?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False, "forms__name": form_name},
+        limit_choices_to={"hidden": False},
     )
     baby = models.ForeignKey(
         Pregnant,
@@ -202,7 +200,7 @@ class PregnancyMixin(models.Model):
         help_text="Have you had a baby within the last 26 weeks?",
         blank=True,
         null=True,
-        limit_choices_to={"hidden": False, "forms__name": form_name},
+        limit_choices_to={"hidden": False},
     )
 
 
@@ -272,7 +270,6 @@ class Person(BaseModel):
         on_delete=models.PROTECT,
         null=True,
         blank=True,
-        limit_choices_to={"forms__name": form_name},
     )
     best_code_2 = models.ForeignKey(
         CommentsCode,
@@ -280,7 +277,6 @@ class Person(BaseModel):
         on_delete=models.PROTECT,
         null=True,
         blank=True,
-        limit_choices_to={"forms__name": form_name},
     )
     positivity = models.PositiveIntegerField(null=True, blank=True)
 
@@ -293,7 +289,6 @@ class Person(BaseModel):
         on_delete=models.PROTECT,
         null=True,
         blank=True,
-        limit_choices_to={"forms__name": form_name},
     )
     improve_code_2 = models.ForeignKey(
         CommentsCode,
@@ -301,7 +296,6 @@ class Person(BaseModel):
         on_delete=models.PROTECT,
         null=True,
         blank=True,
-        limit_choices_to={"forms__name": form_name},
     )
     criticality = models.PositiveIntegerField(null=True, blank=True)
 
