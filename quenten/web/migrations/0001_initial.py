@@ -383,7 +383,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("name", models.CharField(max_length=128)),
-                ("code", models.DecimalField(decimal_places=3, max_digits=3)),
+                ("code", models.DecimalField(decimal_places=3, max_digits=10)),
                 ("date_from", models.DateField()),
                 ("date_to", models.DateField()),
                 ("time", models.IntegerField(blank=True, null=True)),

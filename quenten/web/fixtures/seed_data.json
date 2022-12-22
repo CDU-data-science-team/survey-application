@@ -723,8 +723,8 @@
         "pk": null,
         "fields": {
             "directorate": "366f58db-2c17-4db0-802f-7822112a8af7",
-            "name": "Test Team Name 1",
-            "code": "0.001",
+            "name": "Thorneywood Mount",
+            "code": "100.00",
             "date_from": "2022-06-01",
             "date_to": "2022-06-20",
             "time": null,

@@ -205,7 +205,7 @@ class Team(BaseModel):
 
     directorate = models.ForeignKey(Directorate, on_delete=models.PROTECT)
     name = models.CharField(max_length=128)
-    code = models.DecimalField(max_digits=3, decimal_places=3)
+    code = models.DecimalField(max_digits=10, decimal_places=3)
     date_from = models.DateField()
     date_to = models.DateField()
     time = models.IntegerField(null=True, blank=True)
@@ -240,7 +240,7 @@ class Person(BaseModel):
     added_by = models.ForeignKey(CustomUser, on_delete=models.PROTECT, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    paper_index = models.IntegerField(editable=False, null=True, unique=True)
+    paper_index = models.IntegerField(editable=False, null=True, unique=False)
 
     comments_good = models.TextField(null=True, blank=True, help_text="What was good?")
     best_code_1 = models.ForeignKey(
