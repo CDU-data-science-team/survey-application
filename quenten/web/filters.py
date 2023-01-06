@@ -3,6 +3,13 @@ from web import forms, models
 
 
 class ResultFilter(django_filters.FilterSet):
+    """
+    Filter for use on the responses list view.
+    Allows filtering by paper index, team and form type.
+
+    Args:
+        django_filters (FilterSet): FilterSet from django_filters
+    """
     _PERSONS = [
         ("adult", "Adult"),
         ("child", "Child / Young Person"),

@@ -212,7 +212,7 @@ class UncodedListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
 
     def get_queryset(self) -> QuerySet:
         """
-        Override - filter on if response has comments and is uncoded.
+        Override to filter for uncoded responses.
         """
         q = Person.objects
         q = q.filter(~Q(comments_good="") | ~Q(comments_better=""))
@@ -245,6 +245,9 @@ class UncodedUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
         return Person.objects.get(paper_index=self.kwargs.get("paper_index"))
 
     def get_success_url(self) -> str:
+        """
+        Return based on the button choice in the form.
+        """
         return (
             reverse_lazy("uncoded-list")
             if "submit-back" in self.request.POST
@@ -265,6 +268,9 @@ class UncodedUpdateNext(UncodedUpdateView):
         return self.render_to_response(context)
 
     def get_object(self) -> Person:
+        """
+        Override to filter for uncoded responses.
+        """
         q = Person.objects
         q = q.filter(~Q(comments_good="") | ~Q(comments_better=""))
         q = q.filter(
