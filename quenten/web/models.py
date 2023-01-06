@@ -454,7 +454,7 @@ class Child(Person, DemographicsMixin):
         limit_choices_to={"hidden": False, "forms__name": form_name},
     )
     listening = models.ForeignKey(
-        ChildRating,
+        Rating,
         related_name="child_listening",
         on_delete=models.PROTECT,
         help_text="How good were our services at listening to you?",
